@@ -1,1 +1,1 @@
-from Coverage.text_coverage_data import wds_universe, sets_universe
+from text_coverage_data import wds_universe, sets_universe
