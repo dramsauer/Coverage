@@ -26,29 +26,29 @@ import nltk
 from nltk.corpus import reuters
 
 
-def setProcessing(list_set):
+def set_processing(list_set):
     cleaned_list = []
     i = 0
     while i < len(list_set):
-        if any(char.isdigit() for char in list_set[i]) == False:
-            if punctuationCheck(list_set[i]):
+        if not any(char.isdigit() for char in list_set[i]):
+            if punctuation_check(list_set[i]):
                 cleaned_list.append(list_set[i].lower())
         i += 1
     return set(cleaned_list)
 
 
-def punctuationCheck(inp_string):
+def punctuation_check(inp_string):
     return \
         "." not in inp_string and \
         "'" not in inp_string and \
         len(inp_string) > 1
 
 
-def sentanceProcessing(sentances):
+def sentence_processing(sentences):
     all_sets = []
-    for i in range(len(sentances)):
-        sentance_set = sentances[i]
-        all_sets.append(setProcessing(sentance_set))
+    for i in range(len(sentences)):
+        sentance_set = sentences[i]
+        all_sets.append(set_processing(sentance_set))
     return all_sets
 
 
@@ -58,7 +58,7 @@ wds = set(reuters.words())
 list_set = list(wds)
 
 # wds_universe represents all elemnts that can be "covered"
-wds_universe = setProcessing(list_set)
+wds_universe = set_processing(list_set)
 
 # PART 2
 # Creating the "sets" from sentances
@@ -67,4 +67,4 @@ sentances = reuters.sents()
 
 # Which ever of the above two variables (sentances or paragraphs) I pass to the 
 # sentanceProcessing function becomes my sets to choose.
-sets_universe = sentanceProcessing(sentances)
+sets_universe = sentence_processing(sentances)
