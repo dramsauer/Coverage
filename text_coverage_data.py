@@ -4,12 +4,12 @@
 """
 This script will create the two variables to be used for the coverage problem.
 1 -- A universe of words (or elements) to be covered (~29,000)
-    The elemnts are contained in the wds_universe set variable.
+    The elements are contained in the wds_universe set variable.
 2 -- A universe of sets to choose from to cover the elements (~55,000)
-    The sets are contained in the sets_universe list varaible.
+    The sets are contained in the sets_universe list variable.
 
 
-Running this script should generate the reqired data. It is recomended to use 
+Running this script should generate the required data. It is recommended to use
 the nltk.download() method to retrieve the data in order to automatically 
 generate the file paths required to run the respective nltk methods.
 
