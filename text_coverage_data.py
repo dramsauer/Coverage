@@ -57,7 +57,7 @@ def sentence_processing(sentences):
 wds = set(reuters.words())
 list_set = list(wds)
 
-# wds_universe represents all elemnts that can be "covered"
+# wds_universe represents all elements that can be "covered"
 wds_universe = set_processing(list_set)
 
 # PART 2
