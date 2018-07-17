@@ -47,8 +47,8 @@ def punctuation_check(inp_string):
 def sentence_processing(sentences):
     all_sets = []
     for i in range(len(sentences)):
-        sentance_set = sentences[i]
-        all_sets.append(set_processing(sentance_set))
+        sentence_set = sentences[i]
+        all_sets.append(set_processing(sentence_set))
     return all_sets
 
 
@@ -61,10 +61,10 @@ list_set = list(wds)
 wds_universe = set_processing(list_set)
 
 # PART 2
-# Creating the "sets" from sentances
-sentances = reuters.sents()
+# Creating the "sets" from sentences
+sentences = reuters.sents()
 # paragraphs=reuters.paras()
 
-# Which ever of the above two variables (sentances or paragraphs) I pass to the 
-# sentanceProcessing function becomes my sets to choose.
-sets_universe = sentence_processing(sentances)
+# Which ever of the above two variables (sentences or paragraphs) I pass to the
+# sentenceProcessing function becomes my sets to choose.
+sets_universe = sentence_processing(sentences)
