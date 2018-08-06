@@ -1,7 +1,22 @@
+import re
+from collections import defaultdict, Counter
+
 from text_coverage_data import wds_universe, sets_universe
 
 
 # Greedy / GA
+
+
+# TODO: Inverted index Tj
+def index_sets(sets):
+    index = defaultdict(lambda: defaultdict(Counter))
+    for id, set in enumerate(sets):
+        for word in set:
+            print(index[word][id])
+            index[word][id] += 1
+    print(index)
+    return index
+
 
 # Greedy Heuristic
 def greedy(X, S):
@@ -31,6 +46,14 @@ def greedy(X, S):
 
 
 if __name__ == "__main__":
-    print("Start Greedy:")
+    # print(str(sets_universe[3]))
+    subcoll = [sets_universe[0],
+               sets_universe[1],
+               sets_universe[2],
+               sets_universe[3],
+               sets_universe[5]]
+
+    ind = index_sets(subcoll)
+    # print("Start Greedy:")
     # solution = greedy(wds_universe, sets_universe)
     # print(solution)
