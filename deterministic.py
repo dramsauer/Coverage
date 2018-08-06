@@ -33,27 +33,37 @@ def greedy(X, S):
     return E
 
 
-# TODO: Inverted index Tj
 def index_sets(sets):
     index = defaultdict(list)
-    for id, set in enumerate(sets):
-        for word in set:
-            index[word].append(id)
+
+    # for id, set in enumerate(sets):
+    #    for word in set:
+    #        index[word].append(id)
+
+    for i in range(len(sets)):
+        for word in sets[i]:
+            index[word].append(i)
+    print("len sets: " + str(len(sets)))
+
     return index
 
 
 def index_sets_test(whole_sets_universe=False):
-    if whole_sets_universe:
+    if not whole_sets_universe:
         test_sets = [sets_universe[0],
-                     sets_universe[1]  # ,
-                     # sets_universe[2],
-                     # sets_universe[3],
-                     # sets_universe[5]
+                     sets_universe[1],
+                     sets_universe[2],
+                     sets_universe[3],
+                     sets_universe[5],
+                     sets_universe[6],
+                     sets_universe[7],
+                     sets_universe[8],
+                     sets_universe[9]
                      ]
     else:
         test_sets = sets_universe
+
     ind = index_sets(test_sets)
-    # print(test_sets)
 
     for item in ind.items():
         print(item)
@@ -63,8 +73,8 @@ def index_sets_test(whole_sets_universe=False):
 
 
 if __name__ == "__main__":
-    # print(str(sets_universe[3]))
-    index_sets_test(whole_sets_universe=True)
-    # print("Start Greedy:")
+    print("")
+    # index_sets_test(whole_sets_universe=True)
+
     # solution = greedy(wds_universe, sets_universe)
     # print(solution)
