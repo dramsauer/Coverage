@@ -42,15 +42,18 @@ def index_sets(sets):
     return index
 
 
-def index_sets_test():
-    subcoll = [sets_universe[0],
-               sets_universe[1]  # ,
-               # sets_universe[2],
-               # sets_universe[3],
-               # sets_universe[5]
-               ]
-    ind = index_sets(subcoll)
-    # print(subcoll)
+def index_sets_test(whole_sets_universe=False):
+    if whole_sets_universe:
+        test_sets = [sets_universe[0],
+                     sets_universe[1]  # ,
+                     # sets_universe[2],
+                     # sets_universe[3],
+                     # sets_universe[5]
+                     ]
+    else:
+        test_sets = sets_universe
+    ind = index_sets(test_sets)
+    # print(test_sets)
 
     for item in ind.items():
         print(item)
@@ -61,7 +64,7 @@ def index_sets_test():
 
 if __name__ == "__main__":
     # print(str(sets_universe[3]))
-    index_sets_test()
+    index_sets_test(whole_sets_universe=True)
     # print("Start Greedy:")
     # solution = greedy(wds_universe, sets_universe)
     # print(solution)
