@@ -30,8 +30,7 @@ def disk_friendly_greedy(elements, set_collection, p):
     for i in range(len_set_collection):
         set_lengths.append(len(set_collection[i]))
 
-    # TODO Algorithm in section 3.2:
-    # TODO > Seperate sets in Sk subcollections
+    # Seperate sets in Sk subcollections
     subcollections = list()
     k = 1
     while True:
@@ -39,7 +38,8 @@ def disk_friendly_greedy(elements, set_collection, p):
             if pow(p, k-1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
                 subcollections[k-1] = i
         k += 1
-    # TODO >
+
+    # TODO Algorithm in section 3.2
 
     # while len(covered_items) != len_elements:
     #    print("*******************")
