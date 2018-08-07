@@ -1,5 +1,4 @@
-import re
-from collections import defaultdict, Counter
+from collections import defaultdict
 
 from text_coverage_data import wds_universe, sets_universe
 
@@ -7,39 +6,52 @@ from text_coverage_data import wds_universe, sets_universe
 # Greedy / GA
 
 # Greedy Heuristic
-def greedy(X, S):
+def disk_friendly_greedy(elements, set_collection, p):
     """
-    :param X: universe of n items; = wds_universe
-    :param S: collection of m subsets; sets_universe
-    :return: solution list containing a sub-collection of indices of S
+    :param elements: universe of len_elements items to be covered; = wds_universe
+    :param set_collection: collection of len_set_collection subsets; = sets_universe
+    :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor
+    :return: solution list containing a sub-collection of indices of set_collection
     """
 
-    # |X| = n = 29.181; |S| = m = 54.716
-    n = len(X)
-    m = len(S)
+    # |elements| = len_elements = 29.181; |set_collection| = len_set_collection = 54.716
+    len_elements = len(elements)
+    len_set_collection = len(set_collection)
 
-    # E := set of indices of sets in the solution; C := elements covered so far
-    E = list()
-    C = list()
+    # solution_indices := set of indices of sets in the solution; covered_items := elements covered so far
+    solution_indices = list()
+    covered_items = list()
 
-    # TODO add inverted index here
+    # Create an inverted index
+    # inverted_index = index_sets()
 
-    while len(C) != n:
-        print("*******************")
-        # print(len(C))
-        # print(n)
-        # print(m)
-        # C.append(1)
-    return E
+    # Compute length for each set and save it in list. set_length[i] corresponds to same set as set_collection[i]
+    set_lengths = list()
+    for i in range(len_set_collection):
+        set_lengths.append(len(set_collection[i]))
+
+    # TODO Algorithm in section 3.2:
+    # TODO > Seperate sets in Sk subcollections
+    subcollections = list()
+    k = 1
+    while True:
+        for i in range(len(set_lengths)):
+            if pow(p, k-1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
+                subcollections[k-1] = i
+        k += 1
+    # TODO >
+
+    # while len(covered_items) != len_elements:
+    #    print("*******************")
+        # print(len(covered_items))
+        # print(len_elements)
+        # print(len_set_collection)
+        # covered_items.append(1)
+    return solution_indices
 
 
 def index_sets(sets):
     index = defaultdict(list)
-
-    # for id, set in enumerate(sets):
-    #    for word in set:
-    #        index[word].append(id)
-
     for i in range(len(sets)):
         for word in sets[i]:
             index[word].append(i)
@@ -76,5 +88,5 @@ if __name__ == "__main__":
     print("")
     # index_sets_test(whole_sets_universe=True)
 
-    # solution = greedy(wds_universe, sets_universe)
+    solution = disk_friendly_greedy(wds_universe, sets_universe)
     # print(solution)
