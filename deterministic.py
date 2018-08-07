@@ -25,32 +25,39 @@ def disk_friendly_greedy(elements, set_collection, p):
     # Create an inverted index
     # inverted_index = index_sets()
 
+
+
+
     # Compute length for each set and save it in list. set_length[i] corresponds to same set as set_collection[i]
     set_lengths = list()
     for i in range(len_set_collection):
         set_lengths.append(len(set_collection[i]))
 
+
+
     # Seperate sets in Sk subcollections
     subcollections = []
     k = 1
     while k < 4:
-        print('k = ' + str(k))
+        # print('k = ' + str(k))
 
         subcollections.append(list())
         for i in range(len(set_lengths)):
             if pow(p, k-1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
                 subcollections[k-1].append(i)
-                print(str(set_collection[i]) + " < Set ; Length: " + str(set_lengths[i]))
-        print('*******************')
-        print('Subcollections[' + str(k-1) + ']:')
-        print(subcollections[k-1])
-        print('*******************\n')
+                # print(str(set_collection[i]) + " < Set ; Length: " + str(set_lengths[i]))
+        # print('*******************')
+        # print('Subcollections[' + str(k-1) + ']:')
+        # print(subcollections[k-1])
+        # print('*******************\n')
         k += 1
+    # print("\nSub-collections:")
+    # print(subcollections)
+    # print("Set_collection:")
+    # print(set_collection)
 
-    print("\nSub-collections:")
-    print(subcollections)
-    print("Set_collection:")
-    print(set_collection)
+
+
 
     # TODO Algorithm in section 3.2
 
