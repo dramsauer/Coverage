@@ -31,22 +31,35 @@ def disk_friendly_greedy(elements, set_collection, p):
         set_lengths.append(len(set_collection[i]))
 
     # Seperate sets in Sk subcollections
-    subcollections = list()
+    subcollections = []
     k = 1
-    while True:
+    while k < 4:
+        print('k = ' + str(k))
+
+        subcollections.append(list())
         for i in range(len(set_lengths)):
             if pow(p, k-1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
-                subcollections[k-1] = i
+                subcollections[k-1].append(i)
+                print(str(set_collection[i]) + " < Set ; Length: " + str(set_lengths[i]))
+        print('*******************')
+        print('Subcollections[' + str(k-1) + ']:')
+        print(subcollections[k-1])
+        print('*******************\n')
         k += 1
+
+    print("\nSub-collections:")
+    print(subcollections)
+    print("Set_collection:")
+    print(set_collection)
 
     # TODO Algorithm in section 3.2
 
     # while len(covered_items) != len_elements:
     #    print("*******************")
-        # print(len(covered_items))
-        # print(len_elements)
-        # print(len_set_collection)
-        # covered_items.append(1)
+    # print(len(covered_items))
+    # print(len_elements)
+    # print(len_set_collection)
+    # covered_items.append(1)
     return solution_indices
 
 
@@ -60,6 +73,7 @@ def index_sets(sets):
     return index
 
 
+# Can be removed when inverted index is working well (i think it does yet)
 def index_sets_test(whole_sets_universe=False):
     if not whole_sets_universe:
         test_sets = [sets_universe[0],
@@ -87,6 +101,32 @@ def index_sets_test(whole_sets_universe=False):
 if __name__ == "__main__":
     print("")
     # index_sets_test(whole_sets_universe=True)
+    test_sets_1 = [sets_universe[0],
+                   sets_universe[1],
+                   sets_universe[2],
+                   sets_universe[3],
+                   sets_universe[5],
+                   sets_universe[6],
+                   sets_universe[7],
+                   sets_universe[8],
+                   sets_universe[9]
+                   ]
+    test_sets_2 = [
+        {'A', 'B', 'C', 'D', 'E'},
+        {'A', 'B', 'D', 'F', 'G'},
+        {'A', 'F', 'G'},
+        {'B', 'C', 'G'},
+        {'G', 'H'},
+        {'E', 'H'},
+        {'C', 'I'},
+        {'A'},
+        {'E'},
+        {'I'}
+                   ]
+    wds_2 = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
+    }
 
-    solution = disk_friendly_greedy(wds_universe, sets_universe)
+    # solution = disk_friendly_greedy(wds_universe, sets_universe)
+    solution = disk_friendly_greedy(wds_2, test_sets_2, p=2)
     # print(solution)
