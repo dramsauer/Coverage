@@ -30,6 +30,14 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     # len_elements = len(elements)
     # len_set_collection = len(set_collection)
 
+    print("+----------------------+")
+    print("| Disk-Friendly Greedy |")
+    print("+----------------------+\n")
+
+    """
+    Pre-processes
+    """
+
 
     # Lists for saving the solution-subcollection and the so-far-covered elements to know, when we can stop.
     # In the end we have
@@ -40,32 +48,26 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     covered_elements = list()   # (2)
 
 
-    print("+----------------------+")
-    print("| Disk-Friendly Greedy |")
-    print("+----------------------+\n")
 
-    """
-    Pre-processes
-    """
-
-    # Create an inverted index from our set_collection and save it as defaultdict(<class 'list'>, ...)
-    inverted_index = build_inverted_index(set_collection, print_output=print_logs)
+    # Create an inverted index (3) from our set_collection
+    # and save it as defaultdict(<class 'list'>, ...)
+    inverted_index = build_inverted_index(set_collection, print_output=print_logs)  # (3)
 
 
-    # Compute lengths for each set and save it in list. We then get a list of lengths of sets (3)
+    # Compute lengths for each set and save it in list. We then get a list of lengths of sets (4)
     # set_length[i] corresponds to same set as set_collection[i]
-    set_lengths = compute_set_lengths(set_collection)    # (3)
+    set_lengths = compute_set_lengths(set_collection)    # (4)
 
 
-    # Build sub-collections as list of lists (4) for efficient partitioning of the given set_collection.
+    # Build sub-collections as list of lists (5) for efficient partitioning of the given set_collection.
     # The sub-collections are partitioned by the lengths of the sets as following:
     #           p^k-1  <=  set_length[i]  <  p^k    ; with
     # p as a approximating factor greater 1;
     # and  k as an iterating number;
     # Sk := set_length[i];
-    # K may be the greatest k with non-empty Sk (5).
+    # K may be the greatest k with non-empty Sk (6).
     # This approach is the main contribution of Cormode et al.
-    subcollections, K = build_subcollections(p, set_collection,  set_lengths,                   # (4),(5)
+    subcollections, K = build_subcollections(p, set_collection,  set_lengths,                   # (5),(6)
                                              print_params=print_logs, print_output=print_logs)
 
 
