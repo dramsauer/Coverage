@@ -40,6 +40,10 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     covered_elements = list()   # (2)
 
 
+    print("+----------------------+")
+    print("| Disk-Friendly Greedy |")
+    print("+----------------------+\n")
+
     """
     Pre-processes
     """
@@ -50,9 +54,7 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
 
     # Compute lengths for each set and save it in list. We then get a list of lengths of sets (3)
     # set_length[i] corresponds to same set as set_collection[i]
-    set_lengths = list()    # (3)
-    for i in range(len_set_collection):
-        set_lengths.append(len(set_collection[i]))
+    set_lengths = compute_set_lengths(len_set_collection, set_collection)    # (3)
 
 
     # Build sub-collections as list of lists (4) for efficient partitioning of the given set_collection.
@@ -63,7 +65,8 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     # Sk := set_length[i];
     # K may be the greatest k with non-empty Sk (5).
     # This approach is the main contribution of Cormode et al.
-    subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs) # (4),(5)
+    subcollections, K = build_subcollections(p, set_collection,  set_lengths,                   # (4),(5)
+                                             print_params=print_logs, print_output=print_logs)
 
 
 
@@ -78,6 +81,19 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     return solution_indices
 
 
+def compute_set_lengths(set_collection):
+    """
+    Compute lengths for each set in set_collection and save it in an list.
+    :param set_collection: the collection of sets
+    :return: list containing the corresponding lengths; indices are the same as in set_collection
+    """
+    print("Compute lengths of the sets...")
+    set_lengths = list()
+    for i in range(len(set_collection)):
+        set_lengths.append(len(set_collection[i]))
+    return set_lengths
+
+
 def build_subcollections(p, set_collection, set_lengths, print_params=False, print_output=False):
     """
     Seperate sets in Sk subcollections; k is lowest exponent on p, K is the highest
@@ -89,6 +105,7 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
     :return subcollections: the subcollections as list of lists
     :return K: highest k calculated - needed as higher bound in disk_friendly_greedy()
     """
+    print("Building subcollections of given sets...")
 
     subcollections = []
     k = 1
@@ -140,7 +157,7 @@ def build_inverted_index(set_collection, print_output=False):
          'F': [1, 2],       'H': [4, 5],    'I': [6, 9]})
 
     """
-
+    print("Building an Inverted Index of given sets...")
     index = defaultdict(list)
     for i in range(len(set_collection)):
         for word in set_collection[i]:
@@ -151,7 +168,7 @@ def build_inverted_index(set_collection, print_output=False):
         print("Inverted Index defaultdict:")
         print(index)
         print()
-        print("Length of index: (= len(elements) ", str(len(index)))
+        print("Length of index(= len(elements): ", str(len(index)))
         print()
         print("Keys:")
         print(index.keys())
@@ -205,7 +222,7 @@ if __name__ == "__main__":
 
 
 
-    ind = build_inverted_index(test_sets_2)
+    # ind = build_inverted_index(test_sets_2)
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
     solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=True)
     # print(solution)
