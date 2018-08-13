@@ -21,6 +21,13 @@ def verify_solution(elements, collection, solution_indices):
     return elements == solution_elements
 
 
+def get_set_list_of_solution_indices(collection, solution_indices):
+    sets = list()
+    for i in solution_indices:
+        sets.append(collection[i])
+    return sets
+
+
 if __name__ == "__main__":
     print("")
 
@@ -66,5 +73,7 @@ if __name__ == "__main__":
     solution_indices = deterministic.disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
     print("\n+++++++")
     print("Solution-indices:", solution_indices)
+    solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
+    print("Solution-sets: ", solution_sets)
     result = verify_solution(wds_2, test_sets_2, solution_indices)
     print("Result - are all elements covered by solution: ", result)
