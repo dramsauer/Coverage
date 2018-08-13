@@ -62,7 +62,7 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     # and  k as an iterating number;
     # Sk := set_length[i];
     # K may be the greatest k with non-empty Sk (5).
-    # This approach is the main contribution of Cormode et. al.
+    # This approach is the main contribution of Cormode et al.
     subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs) # (4),(5)
 
 
@@ -207,5 +207,5 @@ if __name__ == "__main__":
 
     ind = build_inverted_index(test_sets_2)
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
-    # solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=TRUE)
+    solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=True)
     # print(solution)
