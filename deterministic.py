@@ -27,8 +27,8 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     # For the final experiment using the reuters corpus from nltk these values are:
     # |elements|        = len_elements = 29.181;
     # |set_collection|  = len_set_collection = 54.716
-    len_elements = len(elements)
-    len_set_collection = len(set_collection)
+    # len_elements = len(elements)
+    # len_set_collection = len(set_collection)
 
 
     # Lists for saving the solution-subcollection and the so-far-covered elements to know, when we can stop.
@@ -54,7 +54,7 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
 
     # Compute lengths for each set and save it in list. We then get a list of lengths of sets (3)
     # set_length[i] corresponds to same set as set_collection[i]
-    set_lengths = compute_set_lengths(len_set_collection, set_collection)    # (3)
+    set_lengths = compute_set_lengths(set_collection)    # (3)
 
 
     # Build sub-collections as list of lists (4) for efficient partitioning of the given set_collection.
