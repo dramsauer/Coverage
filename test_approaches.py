@@ -1,5 +1,25 @@
-import deterministic,statistic
+import deterministic
+import statistic
 from text_coverage_data import wds_universe, sets_universe
+
+
+def verify_solution(elements, collection, solution_indices):
+    """
+    Method for verifying whether a solution-index-set contains the same elements
+    as the reference elements list or not and therefore represents an optimal solution.
+    :param elements: elements that need to be covered
+    :param collection: collection of sets for covering
+    :param solution_indices: containing indices of sets covered from collection
+    :return: boolean value if solution covers elements
+    """
+    solution_elements = set()
+    for i in solution_indices:
+        for j in collection[i]:
+            solution_elements.add(j)
+    print("Elements that need to get covered:  ", elements)
+    print("Elements that actually got covered: ", solution_elements)
+    return elements == solution_elements
+
 
 if __name__ == "__main__":
     print("")
@@ -43,7 +63,8 @@ if __name__ == "__main__":
     }
 
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
-    solution = deterministic.disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
+    solution_indices = deterministic.disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
     print("\n+++++++")
-    print("Solution:")
-    print(solution)
+    print("Solution-indices:", solution_indices)
+    result = verify_solution(wds_2, test_sets_2, solution_indices)
+    print("Result - are all elements covered by solution: ", result)
