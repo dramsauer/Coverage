@@ -135,7 +135,6 @@ def compute_set_lengths(set_collection):
     set_lengths = list()
     for i in range(len(set_collection)):
         set_lengths.append(len(set_collection[i]))
-    print("---------------------------------\n")
     return set_lengths
 
 
@@ -150,6 +149,9 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
     :return subcollections: the subcollections as list of lists
     :return K: highest k calculated - needed as higher bound in disk_friendly_greedy()
     """
+    if print_params or print_output:
+        print("---------------------------------\n")
+
     print("Building subcollections of given sets...")
 
     subcollections = []
@@ -231,5 +233,5 @@ if __name__ == "__main__":
 
     # ind = build_inverted_index(test_sets_2)
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
-    solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=True)
+    solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
     # print(solution)
