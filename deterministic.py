@@ -163,7 +163,6 @@ def build_inverted_index(set_collection, print_output=False):
     return index
 
 
-
 if __name__ == "__main__":
     print("")
 
