@@ -16,12 +16,27 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
         Cormode, G., Karloff, H., & Wirth, A. (n.d.). Set Cover Algorithms For Very Large Datasets.
         http://dimacs.rutgers.edu/~graham/pubs/papers/ckw.pdf
 
-    :param elements: universe of len_elements items to be covered; = wds_universe
-    :param set_collection: collection of len_set_collection subsets; = sets_universe
-    :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor
+    :param elements: universe of len_elements items to be covered; = wds_universe   (1)
+    :param set_collection: collection of len_set_collection subsets; = sets_universe (2)
+    :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor (3)
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution list containing a sub-collection of indices of set_collection
     """
+
+    # List of important variables, constants and lists:
+    #
+    # elements          (1)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
+    # set_collection    (2)     <class 'list'> containing 'set's [{'C', 'B', 'A'}, {'G', 'H'}, {'H', 'E'}, {'I'}, {'E'}]
+    # p                 (3)     float
+    #
+    # solution_indices  (4)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
+    # covered_elements  (5)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
+    #
+    # inverted_index    (6)     defaultdict(<class 'list'>, {'F': [1, 2], 'G': [1, 2, 3, 4], 'H': [4, 5], 'I': [6, 9]})
+    # set_lengths       (7)     <class 'list'>  containing same i's as (2)      [5, 5, 3, 3, 2, 2, 2, 1, 1, 1]
+    # subcollections    (8)     <class 'list'>  containing set's [{8, 9, 7}, {2, 3, 4, 5, 6}, {0, 1}]
+    #
+    # k and K           (9a,9b) int's
 
     # Saving the amount of the elements to be covered and the collection size.
     # For the final experiment using the reuters corpus from nltk these values are:
@@ -39,35 +54,35 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     """
 
 
-    # Lists for saving the solution-subcollection and the so-far-covered elements to know, when we can stop.
+    # Lists for saving the solution-subcollection and the so-far-covered elements ((to know, when we can stop.)) ! Is this even checked?! No!
     # In the end we have
-    # (1) the indices of sets in set_collection, which made it to be part of the solution and
-    # (2) all covered elements, which must be the same as elements-list. If those 2 lists contain the
-    #     same elements, algorithm is finished.
-    solution_indices = list()   # (1)
-    covered_elements = list()   # (2)
+    # (4) the indices of sets in set_collection, which made it to be part of the solution and
+    # (5) all covered elements, which must be the same as elements-list. ((If those 2 lists contain the
+    #     same elements, algorithm is finished.)) TODO Same here!
+    solution_indices = set()   # (4)
+    covered_elements = set()   # (5)
 
 
 
-    # Create an inverted index (3) from our set_collection
+    # Create an inverted index (6) from our set_collection
     # and save it as defaultdict(<class 'list'>, ...)
-    inverted_index = build_inverted_index(set_collection, print_output=print_logs)  # (3)
+    inverted_index = build_inverted_index(set_collection, print_output=print_logs)  # (6)
 
 
-    # Compute lengths for each set and save it in list. We then get a list of lengths of sets (4)
+    # Compute lengths for each set and save it in list. We then get a list of lengths of sets (7)
     # set_length[i] corresponds to same set as set_collection[i]
-    set_lengths = compute_set_lengths(set_collection)    # (4)
+    set_lengths = compute_set_lengths(set_collection)    # (7)
 
 
-    # Build sub-collections as list of lists (5) for efficient partitioning of the given set_collection.
+    # Build sub-collections as list of lists (8) for efficient partitioning of the given set_collection.
     # The sub-collections are partitioned by the lengths of the sets as following:
     #           p^k-1  <=  set_length[i]  <  p^k    ; with
     # p as a approximating factor greater 1;
-    # and  k as an iterating number;
+    # and  k (9a) as an iterating number;
     # Sk := set_length[i];
-    # K may be the greatest k with non-empty Sk (6).
+    # K (9b) may be the greatest k with non-empty Sk.
     # This approach is the main contribution of Cormode et al.
-    subcollections, K = build_subcollections(p, set_collection,  set_lengths,                   # (5),(6)
+    subcollections, K = build_subcollections(p, set_collection,  set_lengths,                   # (8),(9b)
                                              print_params=print_logs, print_output=print_logs)
 
 
@@ -76,13 +91,63 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     Main Algorithm
     """
 
-    # TODO Algorithm in section 3.2
-    """
+    print(subcollections)
+    print("\n")
+
+    # 1. Loop in the algorithm.
+    # Iterating from subcollection with the longest sets down
+    # to the subcollection with set_lengths higher than 1.
     k = K
-    while k >= 1:
-        
+    while k > 1:
+        print("k: ", str(k))
+        pk_lower = pow(p, k-1)
+        pk_higher = pow(p, k)
+
+        # For each subcollection in subcollections (iterating backwards from highest index to lowest)
+        i = len(subcollections)-1
+        while i >= 0:
+            for set_i in subcollections[i]:
+                # { Si \ C };
+                # if there are already covered elements in set_collection[set_i]:
+                # - remove them from the set,
+                # - update the inverted index by removing the index,
+                # - add it to the next subcollection Sk-1
+                for element in covered_elements:
+                    elements_occurances = inverted_index.get(element)
+                    if set_i in elements_occurances:
+                        set_collection[set_i].remove(element)
+                        inverted_index[element] = elements_occurances.remove(set_i)
+                        # subcollections[i].remove(set_i)
+                        subcollections[i - 1].append(set_i)
+
+                # | Si \ C | >= p^(k-1) ;
+                # if the set is still longer than p^(k-1) after covered-elements-removal from set:
+                # add index of set_collection[set_i] (=> set_i ) to solution_indices
+                if len(set_collection[set_i]) >= pk_lower:
+                    solution_indices.add(set_i)
+                    print(len(set_collection[set_i])) # <- one set
+                    print("***\n")
+
+                # if the set length after covered-elements-removal is below the bound p^(k-1) then
+                #
+                else:
+                    print()
+            i -= 1
         k -= 1
-    """
+    print("k: after all ", str(k))
+
+    # 2. Loop in the algorithm.
+    # The last remaining subcollection is that one that only contains sets with set_length = 1.
+    for set_i in subcollections[0]:
+        for element in covered_elements:
+            elements_occurances = inverted_index.get(element)
+            if set_i in elements_occurances:
+                set_collection[set_i].remove(element)
+                inverted_index[element] = elements_occurances.remove(set_i)
+                subcollections[i - 1].append(set_i)
+            else:
+                solution_indices.add(set_i)
+
 
     return solution_indices
 
@@ -146,7 +211,7 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
     :param set_lengths: list containing the lengths of the set in the whole set_collection; indices are the same
     :param print_params: if set true, parameters p, k, K and p^K are printed out
     :param print_output: if set true, the subcollections are printed out
-    :return subcollections: the subcollections as list of lists
+    :return subcollections: the subcollections as list of set's
     :return K: highest k calculated - needed as higher bound in disk_friendly_greedy()
     """
     if print_params or print_output:
@@ -158,10 +223,10 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
     k = 1
     K = log(max(set_lengths), p)
     while k < K + 1:
-        subcollections.append(list())
+        subcollections.append(set())
         for i in range(len(set_lengths)):
             if pow(p, k - 1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
-                subcollections[k - 1].append(i)
+                subcollections[k - 1].add(i)
         k += 1
 
     if print_params:
@@ -229,9 +294,8 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-
-
-    # ind = build_inverted_index(test_sets_2)
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
     solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
-    # print(solution)
+    print("\n+++++++")
+    print("Solution:")
+    print(solution)
