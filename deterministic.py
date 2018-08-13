@@ -9,40 +9,65 @@ from text_coverage_data import wds_universe, sets_universe
 # Greedy Heuristic
 def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     """
+    An special implementation of the greedy algorithm to cover large data sets. It is based on building
+    sub-collections by the size of the sets given which might be faster for modern data sizes.
+
+    This approach is the main contribution of:
+        Cormode, G., Karloff, H., & Wirth, A. (n.d.). Set Cover Algorithms For Very Large Datasets.
+        http://dimacs.rutgers.edu/~graham/pubs/papers/ckw.pdf
+
     :param elements: universe of len_elements items to be covered; = wds_universe
     :param set_collection: collection of len_set_collection subsets; = sets_universe
     :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor
+    :param print_logs: prints outputs and parameters of used functions.
     :return: solution list containing a sub-collection of indices of set_collection
     """
 
-    # |elements| = len_elements = 29.181; |set_collection| = len_set_collection = 54.716
+    # Saving the amount of the elements to be covered and the collection size.
+    # For the final experiment using the reuters corpus from nltk these values are:
+    # |elements|        = len_elements = 29.181;
+    # |set_collection|  = len_set_collection = 54.716
     len_elements = len(elements)
     len_set_collection = len(set_collection)
 
-    # solution_indices := set of indices of sets in the solution; covered_items := elements covered so far
-    solution_indices = list()
-    covered_items = list()
 
-    # Create an inverted index
+    # Lists for saving the solution-subcollection and the so-far-covered elements to know, when we can stop.
+    # In the end we have
+    # (1) the indices of sets in set_collection, which made it to be part of the solution and
+    # (2) all covered elements, which must be the same as elements-list. If those 2 lists contain the
+    #     same elements, algorithm is finished.
+    solution_indices = list()   # (1)
+    covered_elements = list()   # (2)
+
+
+    """
+    Pre-processes
+    """
+
+    # Create an inverted index from our set_collection and save it as defaultdict(<class 'list'>, ...)
     inverted_index = build_inverted_index(set_collection, print_output=print_logs)
 
-    # Compute length for each set and save it in list. set_length[i] corresponds to same set as set_collection[i]
-    set_lengths = list()
+
+    # Compute lengths for each set and save it in list. We then get a list of lengths of sets (3)
+    # set_length[i] corresponds to same set as set_collection[i]
+    set_lengths = list()    # (3)
     for i in range(len_set_collection):
         set_lengths.append(len(set_collection[i]))
 
-    subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs)
+
+    # Build sub-collections as list of lists (4) for efficient partitioning of the given set_collection.
+    # The sub-collections are partitioned by the lengths of the sets as following:
+    #           p^k-1  <=  set_length[i]  <  p^k    ; with
+    # p as a approximating factor greater 1;
+    # and  k as an iterating number;
+    # Sk := set_length[i];
+    # K may be the greatest k with non-empty Sk (5).
+    # This approach is the main contribution of Cormode et. al.
+    subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs) # (4),(5)
 
     # TODO Algorithm in section 3.2
     sub_collection_index = 0
-    # while sub_collection_index
 
-    # while len(covered_items) != len_elements:
-    #    print("*******************")
-    # print(len(covered_items))
-    # print(len_elements)
-    # print(len_set_collection)
-    # covered_items.append(1)
     return solution_indices
 
 
