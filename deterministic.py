@@ -65,8 +65,15 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     # This approach is the main contribution of Cormode et. al.
     subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs) # (4),(5)
 
+
+
+    """
+    Main Algorithm
+    """
+
     # TODO Algorithm in section 3.2
     sub_collection_index = 0
+
 
     return solution_indices
 
