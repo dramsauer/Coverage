@@ -77,10 +77,52 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     """
 
     # TODO Algorithm in section 3.2
-    sub_collection_index = 0
-
+    """
+    k = K
+    while k >= 1:
+        
+        k -= 1
+    """
 
     return solution_indices
+
+
+
+def build_inverted_index(set_collection, print_output=False):
+    """
+    Builds an inverted index from a collection of sets.
+    :param set_collection: collection of sets
+    :param print_output: if set true, the index is printed out
+    :return: the inverted index as defaultdict containing lists
+
+    Example:
+
+    defaultdict(<class 'list'>,
+        {'A': [0, 1, 2, 7], 'B': [0, 1, 3], 'D': [0, 1],
+         'C': [0, 3, 6],    'E': [0, 5, 8], 'G': [1, 2, 3, 4],
+         'F': [1, 2],       'H': [4, 5],    'I': [6, 9]})
+
+    """
+    print("Building an Inverted Index of given sets...")
+    index = defaultdict(list)
+    for i in range(len(set_collection)):
+        for word in set_collection[i]:
+            index[word].append(i)
+
+    if print_output:
+        print("Inverted Index defaultdict:")
+        print(index)
+        print()
+        print("Length of index(= len(elements): ", str(len(index)))
+        print()
+        print("Keys:")
+        print(index.keys())
+        print()
+        print("Items:")
+        print(index.items())
+        print("---------------------------------\n")
+
+    return index
 
 
 def compute_set_lengths(set_collection):
@@ -93,6 +135,7 @@ def compute_set_lengths(set_collection):
     set_lengths = list()
     for i in range(len(set_collection)):
         set_lengths.append(len(set_collection[i]))
+    print("---------------------------------\n")
     return set_lengths
 
 
@@ -120,7 +163,6 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
         k += 1
 
     if print_params:
-        print("\n******************************")
         print("Parameters:")
         print("max(set_lengths): ", str(max(set_lengths)))
         print("p: ", str(p))
@@ -130,7 +172,7 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
         print("K+1: ", str(K + 1))
         print("k: ", str(k), "  # After subcollectioning - also is the 'new' K")
     if print_output:
-        print("\n******************************")
+        print("\n---   ---   ---   ---   ---   ---")
         print("Subcollections:")
         print(subcollections)
         for i in range(len(subcollections)):
@@ -138,48 +180,11 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
             for j in range(len(subcollections[i])):
                 set_num = subcollections[i][j]
                 print(set_collection[set_num])
-        print("******************************")
+        print("---------------------------------\n")
 
     K = k
     return subcollections, K
 
-
-def build_inverted_index(set_collection, print_output=False):
-    """
-    Builds an inverted index from a collection of sets.
-    :param set_collection: collection of sets
-    :param print_output: if set true, the index is printed out
-    :return: the inverted index as defaultdict containing lists
-
-    Example:
-
-    defaultdict(<class 'list'>,
-        {'A': [0, 1, 2, 7], 'B': [0, 1, 3], 'D': [0, 1],
-         'C': [0, 3, 6],    'E': [0, 5, 8], 'G': [1, 2, 3, 4],
-         'F': [1, 2],       'H': [4, 5],    'I': [6, 9]})
-
-    """
-    print("Building an Inverted Index of given sets...")
-    index = defaultdict(list)
-    for i in range(len(set_collection)):
-        for word in set_collection[i]:
-            index[word].append(i)
-
-    if print_output:
-        print("\n******************************")
-        print("Inverted Index defaultdict:")
-        print(index)
-        print()
-        print("Length of index(= len(elements): ", str(len(index)))
-        print()
-        print("Keys:")
-        print(index.keys())
-        print()
-        print("Items:")
-        print(index.items())
-        print("******************************")
-
-    return index
 
 
 if __name__ == "__main__":
