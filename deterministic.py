@@ -1,4 +1,5 @@
 from collections import defaultdict
+from math import log
 
 from text_coverage_data import wds_universe, sets_universe
 
@@ -6,7 +7,7 @@ from text_coverage_data import wds_universe, sets_universe
 # Greedy / GA
 
 # Greedy Heuristic
-def disk_friendly_greedy(elements, set_collection, p):
+def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
     """
     :param elements: universe of len_elements items to be covered; = wds_universe
     :param set_collection: collection of len_set_collection subsets; = sets_universe
@@ -23,43 +24,18 @@ def disk_friendly_greedy(elements, set_collection, p):
     covered_items = list()
 
     # Create an inverted index
-    # inverted_index = index_sets()
-
-
-
+    inverted_index = build_inverted_index(set_collection, print_output=print_logs)
 
     # Compute length for each set and save it in list. set_length[i] corresponds to same set as set_collection[i]
     set_lengths = list()
     for i in range(len_set_collection):
         set_lengths.append(len(set_collection[i]))
 
-
-
-    # Seperate sets in Sk subcollections
-    subcollections = []
-    k = 1
-    while k < 4:
-        # print('k = ' + str(k))
-
-        subcollections.append(list())
-        for i in range(len(set_lengths)):
-            if pow(p, k-1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
-                subcollections[k-1].append(i)
-                # print(str(set_collection[i]) + " < Set ; Length: " + str(set_lengths[i]))
-        # print('*******************')
-        # print('Subcollections[' + str(k-1) + ']:')
-        # print(subcollections[k-1])
-        # print('*******************\n')
-        k += 1
-    # print("\nSub-collections:")
-    # print(subcollections)
-    # print("Set_collection:")
-    # print(set_collection)
-
-
-
+    subcollections, K = build_subcollections(p, set_lengths, print_params=print_logs, print_output=print_logs)
 
     # TODO Algorithm in section 3.2
+    sub_collection_index = 0
+    # while sub_collection_index
 
     # while len(covered_items) != len_elements:
     #    print("*******************")
@@ -70,44 +46,105 @@ def disk_friendly_greedy(elements, set_collection, p):
     return solution_indices
 
 
-def index_sets(sets):
+def build_subcollections(p, set_collection, set_lengths, print_params=False, print_output=False):
+    """
+    Seperate sets in Sk subcollections; k is lowest exponent on p, K is the highest
+    :param p: rules the sizes of the created sub-collections. see also documentation in disk_friendly_greedy()
+    :param set_collection: collection of sets
+    :param set_lengths: list containing the lengths of the set in the whole set_collection; indices are the same
+    :param print_params: if set true, parameters p, k, K and p^K are printed out
+    :param print_output: if set true, the subcollections are printed out
+    :return subcollections: the subcollections as list of lists
+    :return K: highest k calculated - needed as higher bound in disk_friendly_greedy()
+    """
+
+    subcollections = []
+    k = 1
+    K = log(max(set_lengths), p)
+    while k < K + 1:
+        subcollections.append(list())
+        for i in range(len(set_lengths)):
+            if pow(p, k - 1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
+                subcollections[k - 1].append(i)
+        k += 1
+
+    if print_params:
+        print("\n******************************")
+        print("Parameters:")
+        print("max(set_lengths): ", str(max(set_lengths)))
+        print("p: ", str(p))
+        print("K: ", str(K))
+        print("p^K: ", str(pow(p, K)))
+        print("")
+        print("K+1: ", str(K + 1))
+        print("k: ", str(k), "  # After subcollectioning - also is the 'new' K")
+    if print_output:
+        print("\n******************************")
+        print("Subcollections:")
+        print(subcollections)
+        for i in range(len(subcollections)):
+            print("Subcollection #", str(i), ":")
+            for j in range(len(subcollections[i])):
+                set_num = subcollections[i][j]
+                print(set_collection[set_num])
+        print("******************************")
+
+    K = k
+    return subcollections, K
+
+
+def build_inverted_index(set_collection, print_output=False):
+    """
+    Builds an inverted index from a collection of sets.
+    :param set_collection: collection of sets
+    :param print_output: if set true, the index is printed out
+    :return: the inverted index as defaultdict containing lists
+
+    Example:
+
+    defaultdict(<class 'list'>,
+        {'A': [0, 1, 2, 7], 'B': [0, 1, 3], 'D': [0, 1],
+         'C': [0, 3, 6],    'E': [0, 5, 8], 'G': [1, 2, 3, 4],
+         'F': [1, 2],       'H': [4, 5],    'I': [6, 9]})
+
+    """
+
     index = defaultdict(list)
-    for i in range(len(sets)):
-        for word in sets[i]:
+    for i in range(len(set_collection)):
+        for word in set_collection[i]:
             index[word].append(i)
-    print("len sets: " + str(len(sets)))
+
+    if print_output:
+        print("\n******************************")
+        print("Inverted Index defaultdict:")
+        print(index)
+        print()
+        print("Length of index: (= len(elements) ", str(len(index)))
+        print()
+        print("Keys:")
+        print(index.keys())
+        print()
+        print("Items:")
+        print(index.items())
+        print("******************************")
 
     return index
 
 
-# Can be removed when inverted index is working well (i think it does yet)
-def index_sets_test(whole_sets_universe=False):
-    if not whole_sets_universe:
-        test_sets = [sets_universe[0],
-                     sets_universe[1],
-                     sets_universe[2],
-                     sets_universe[3],
-                     sets_universe[5],
-                     sets_universe[6],
-                     sets_universe[7],
-                     sets_universe[8],
-                     sets_universe[9]
-                     ]
-    else:
-        test_sets = sets_universe
-
-    ind = index_sets(test_sets)
-
-    for item in ind.items():
-        print(item)
-    print("\n Länge des Indexes: " + str(len(ind)))
-    # print(ind.items())
-    # print(ind.keys())
-
 
 if __name__ == "__main__":
     print("")
-    # index_sets_test(whole_sets_universe=True)
+
+    """
+    Execution of the disk-friendly greedy algorithm for the given set cover problem.
+    The set collection is contained in sets_universe,
+    the elements to cover are stored in wds_universe.
+    
+    2 Test sets are also prepared further down.
+    """
+
+
+    # Test set containing only a partition of sets_universe:
     test_sets_1 = [sets_universe[0],
                    sets_universe[1],
                    sets_universe[2],
@@ -118,6 +155,7 @@ if __name__ == "__main__":
                    sets_universe[8],
                    sets_universe[9]
                    ]
+    # Test set containing sets as in the paper example and the corresponding wds universe:
     test_sets_2 = [
         {'A', 'B', 'C', 'D', 'E'},
         {'A', 'B', 'D', 'F', 'G'},
@@ -134,6 +172,9 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    # solution = disk_friendly_greedy(wds_universe, sets_universe)
-    solution = disk_friendly_greedy(wds_2, test_sets_2, p=2)
+
+
+    ind = build_inverted_index(test_sets_2)
+    # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
+    # solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=TRUE)
     # print(solution)
