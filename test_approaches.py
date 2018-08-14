@@ -69,7 +69,7 @@ if __name__ == "__main__":
     }
 
     # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
-    solution_indices = deterministic.disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
+    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2, print_logs=False)
     print("\n+++++++")
     print("Solution-indices:", solution_indices)
     print("# Solution-indices:", len(solution_indices))
