@@ -26,7 +26,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     """
     set_collection = deepcopy(sets)
     print("Selected p-Value: ", p)
-    print("Number of sets for covering: ", str(len(set_collection)))
+    print("Number of sets for covering: ", str(len(set_collection)), "\n")
 
     # List of important variables, constants and lists:
     #
@@ -49,6 +49,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     """
     Pre-processes
     """
+    print("Pre-processes.")
 
 
     # Lists for saving the solution-subcollection and the so-far-covered elements
@@ -90,7 +91,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     # 1. Loop in the algorithm.
     # Iterating from subcollection with the longest sets down
     # to the subcollection with set_lengths higher than 1.
-    print("First loop.")
+    print("\nFirst loop.")
     while k > 1:
         pk_lower = pow(p, k-1)
         try:
@@ -152,7 +153,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
 
     # 2. Loop in the algorithm.
     # The last remaining subcollection is that one that only contains sets with set_length = 1.
-    print("Second Loop.")
+    print("\nSecond Loop.")
     try:
         for set_i in subcollections.get(1):
             for element in covered_elements:
