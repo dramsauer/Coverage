@@ -91,7 +91,7 @@ if __name__ == "__main__":
     Final Set that is our aim to be covered
     """
     if True:
-        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p=1.05, print_logs=True)
+        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p=1.05, print_logs=False)
         print("\n+++++++")
         print("Solution-indices:", solution_indices)
         print("# Solution-indices:", len(solution_indices))
