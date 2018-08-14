@@ -2,22 +2,25 @@ import deterministic
 from text_coverage_data import sets_universe
 
 
-def verify_solution(elements, collection, solution_indices):
+def percentage_of_solution_covering(elements, collection, solution_indices, print_details=False):
     """
     Method for verifying whether a solution-index-set contains the same elements
     as the reference elements list or not and therefore represents an optimal solution.
     :param elements: elements that need to be covered
     :param collection: collection of sets for covering
     :param solution_indices: containing indices of sets covered from collection
-    :return: boolean value if solution covers elements
+    :return: percentage value how many elements the solution elements cover
     """
     solution_elements = set()
     for i in solution_indices:
         for j in collection[i]:
             solution_elements.add(j)
-    print("Elements that need to get covered:  ", elements)
-    print("Elements that actually got covered: ", solution_elements)
-    return elements == solution_elements
+    percentage_overlapping = len(solution_elements) / len(elements)
+    if print_details:
+        print("Elements that need to get covered:  ", elements)
+        print("Elements that actually got covered: ", solution_elements)
+
+    return percentage_overlapping
 
 
 def get_set_list_of_solution_indices(collection, solution_indices):
@@ -77,5 +80,5 @@ if __name__ == "__main__":
     print("Solution-sets: ", solution_sets)
     print()
     print("# Elements that need to get covered: ", len(wds_2))
-    result = verify_solution(wds_2, test_sets_2, solution_indices)
+    result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices)
     print("Result - are all elements covered by solution: ", result)
