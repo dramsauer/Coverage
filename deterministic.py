@@ -127,10 +127,12 @@ def disk_friendly_greedy(sets, p, print_logs=False):
                                 if set_lengths[set_i] != 0:
                                     new_k = int(math.ceil(log(set_lengths[set_i], p)))+1
                                     # b = pow(p, new_k - 1) <= set_lengths[set_i] & set_lengths[set_i] < pow(p, new_k)
-
-                                    next_col = subcollections.get(new_k)
-                                    next_col.append(set_i)
-                                    subcollections[k-1] = next_col  # (c)
+                                    try:
+                                        next_col = subcollections.get(new_k)
+                                        next_col.append(set_i)
+                                        subcollections[k-1] = next_col  # (c)
+                                    except AttributeError:
+                                        pass
                                 continue
 
                         solution_indices.add(set_i)
