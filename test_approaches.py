@@ -13,18 +13,16 @@ def percentage_of_solution_covering(elements, collection, solution_indices):
     :param elements: elements that need to be covered
     :param collection: collection of sets for covering
     :param solution_indices: containing indices of sets covered from collection
-    :return: percentage value how many elements the solution elements cover
+    :return: amount of solution elements, amount elements to cover and
+             percentage value how many elements are covered by the solution elements
     """
     solution_elements = set()
     for i in solution_indices:
         for j in collection[i]:
             solution_elements.add(j)
     percentage_overlapping = len(solution_elements) / len(elements)
-    result_str = "\nElements that actually got covered: " + str(len(solution_elements)) + \
-                 "\nElements that need to get covered:  " + str(len(elements)) + \
-                 "\nResulting percentage of the cover: " + str(round(percentage_overlapping*100, ndigits=3)) + "%"
 
-    return result_str
+    return len(solution_elements), len(elements), percentage_overlapping
 
 
 def get_set_list_of_solution_indices(collection, solution_indices):
@@ -94,32 +92,28 @@ if __name__ == "__main__":
     """
     Final Set that is our aim to be covered
     """
-    result_dict = dict()
-    file = "deterministic_dfg.txt"
 
+
+    headline = "p, Amount of sets in solution (indices), Elements that actually got covered, " \
+               "Elements that need to get covered, Percentage, Time elapsed in sec"
+
+    file = "deterministic_dfg.csv"
+    f = open(file, "w")
+    f.write(headline)
 
     for p in np.arange(1.05, 1.50, 0.05):
-        f = open(file, "w")
 
         start = time.time()
         solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
         end = time.time()
         execution_time = round(end - start, ndigits=3)
 
-        solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+        #solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
-        percentage_str = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+        sol_length, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
 
-        f.write("p = " + str(p) + " >>> ")
-        f.write("\nAmountof indices in solution: " + str(len(solution_indices)))
-        f.write(percentage_str)
-        f.write("\nTime elapsed: " + str(execution_time))
-        f.write("\n\n")
-        f.close()
+        values = str(p) + str(sol_length) + str(elements_len) + str(percentage) + str(execution_time) + "\n"
+        f.write(values)
+        print(values)
 
-        result_str = "\n# Solution-indices: " + str(len(solution_indices)) + percentage_str + "\nTime elapsed in sec: " + str(
-            execution_time)
-        print(result_str)
-        result_dict[p] = result_str
-        break
-
+    f.close()
