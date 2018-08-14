@@ -1,6 +1,5 @@
 import deterministic
-import statistic
-from text_coverage_data import wds_universe, sets_universe
+from text_coverage_data import sets_universe
 
 
 def verify_solution(elements, collection, solution_indices):
@@ -76,6 +75,7 @@ if __name__ == "__main__":
     print("# Solution-indices:", len(solution_indices))
     solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
     print("Solution-sets: ", solution_sets)
+    print()
     print("# Elements that need to get covered: ", len(wds_2))
     result = verify_solution(wds_2, test_sets_2, solution_indices)
     print("Result - are all elements covered by solution: ", result)
