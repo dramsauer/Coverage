@@ -91,7 +91,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     print("First loop.")
     while k > 1:
         pk_lower = pow(p, k-1)
-        if len(subcollections.get(k)) != 0:
+        try:
             for set_i in subcollections.get(k):
 
                 # | Si \ C | >= p^(k-1) ;
@@ -135,12 +135,13 @@ def disk_friendly_greedy(sets, p, print_logs=False):
                             if set_i in elements_occurrences:
                                 elements_occurrences.remove(set_i)
                                 inverted_index[element] = elements_occurrences
-            if print_logs:
-                print("Set_collection: ", set_collection)
-                print("Set_lengths: ", set_lengths)
-                print("Subcollections: ", subcollections)
-
-            k -= 1
+            # if print_logs:
+            # print("Set_collection: ", set_collection)
+            # print("Set_lengths: ", set_lengths)
+            # print("Subcollections: ", subcollections)
+        except TypeError:
+            pass
+        k -= 1
 
 
     if print_logs:
@@ -150,22 +151,16 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     # 2. Loop in the algorithm.
     # The last remaining subcollection is that one that only contains sets with set_length = 1.
     print("Second Loop.")
-    for set_i in subcollections.get(1):
-        for element in covered_elements:
-            if set_lengths[set_i] == 1:
-                if set_collection[set_i].pop() not in covered_elements:
-                    solution_indices.add(set_i)
-                    covered_elements.add(element)
-                set_lengths[set_i] -= 1
-
-
-            if False:
-                elements_occurrences = inverted_index.get(element)
-                if set_i in elements_occurrences:
-                    set_collection[set_i].remove(element)
-                    elements_occurrences.remove(set_i)
-                    inverted_index[element] = elements_occurrences
-
+    try:
+        for set_i in subcollections.get(1):
+            for element in covered_elements:
+                if set_lengths[set_i] == 1:
+                    if set_collection[set_i].pop() not in covered_elements:
+                        solution_indices.add(set_i)
+                        covered_elements.add(element)
+                    set_lengths[set_i] -= 1
+    except TypeError:
+        pass
     return solution_indices
 
 
