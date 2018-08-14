@@ -68,8 +68,8 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    # solution = disk_friendly_greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
-    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2, print_logs=False)
+    # solution = disk_friendly_greedy(sets_universe, p=1.05, print_logs=True)
+    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
     print("\n+++++++")
     print("Solution-indices:", solution_indices)
     print("# Solution-indices:", len(solution_indices))

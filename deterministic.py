@@ -91,55 +91,56 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     print("First loop.")
     while k > 1:
         pk_lower = pow(p, k-1)
-        for set_i in subcollections.get(k):
+        if len(subcollections.get(k)) != 0:
+            for set_i in subcollections.get(k):
 
-            # | Si \ C | >= p^(k-1) ;
-            if set_lengths[set_i] >= pk_lower:
-                    # if there are already elements covered which are in set_collection[set_i]:
-                    # - update the inverted index by removing the index, (a)
-                    # - remove them from the set, (b)
-                    # - add it to the subcollection Sk' where p^k-1 <= set_length[set_i] < p^k, (c)
-                    if len(covered_elements) > 0:
-                        for element in covered_elements:
-                            # { Si(element) € C }:
-                            if element not in set_collection[set_i]:
+                # | Si \ C | >= p^(k-1) ;
+                if set_lengths[set_i] >= pk_lower:
+                        # if there are already elements covered which are in set_collection[set_i]:
+                        # - update the inverted index by removing the index, (a)
+                        # - remove them from the set, (b)
+                        # - add it to the subcollection Sk' where p^k-1 <= set_length[set_i] < p^k, (c)
+                        if len(covered_elements) > 0:
+                            for element in covered_elements:
+                                # { Si(element) € C }:
+                                if element not in set_collection[set_i]:
+                                    continue
+                                # { Si(element) \ C }:
+                                else:
+                                    elements_occurrences = inverted_index.get(element)
+                                    if set_i in elements_occurrences:
+                                        elements_occurrences.remove(set_i)              # (a)
+                                        inverted_index[element] = elements_occurrences  # (a)
+
+                                        set_collection[set_i].remove(element)           # (b)
+                                        set_lengths[set_i] -= 1
+
+                            if set_lengths[set_i] >= pk_lower:
+                                current_col = subcollections.get(k)
+                                current_col.remove(set_i)
+                                if set_lengths[set_i] != 0:
+                                    new_k = int(math.ceil(log(set_lengths[set_i], p)))+1
+                                    # b = pow(p, new_k - 1) <= set_lengths[set_i] & set_lengths[set_i] < pow(p, new_k)
+
+                                    next_col = subcollections.get(new_k)
+                                    next_col.append(set_i)
+                                    subcollections[k-1] = next_col  # (c)
                                 continue
-                            # { Si(element) \ C }:
-                            else:
-                                elements_occurrences = inverted_index.get(element)
-                                if set_i in elements_occurrences:
-                                    elements_occurrences.remove(set_i)              # (a)
-                                    inverted_index[element] = elements_occurrences  # (a)
 
-                                    set_collection[set_i].remove(element)           # (b)
-                                    set_lengths[set_i] -= 1
+                        solution_indices.add(set_i)
+                        for element in set_collection[set_i]:
+                            if element not in covered_elements:
+                                covered_elements.add(element)
+                            elements_occurrences = inverted_index.get(element)
+                            if set_i in elements_occurrences:
+                                elements_occurrences.remove(set_i)
+                                inverted_index[element] = elements_occurrences
+            if print_logs:
+                print("Set_collection: ", set_collection)
+                print("Set_lengths: ", set_lengths)
+                print("Subcollections: ", subcollections)
 
-                        if set_lengths[set_i] >= pk_lower:
-                            current_col = subcollections.get(k)
-                            current_col.remove(set_i)
-                            if set_lengths[set_i] != 0:
-                                new_k = int(math.ceil(log(set_lengths[set_i], p)))+1
-                                # b = pow(p, new_k - 1) <= set_lengths[set_i] & set_lengths[set_i] < pow(p, new_k)
-
-                                next_col = subcollections.get(new_k)
-                                next_col.append(set_i)
-                                subcollections[k-1] = next_col  # (c)
-                            continue
-
-                    solution_indices.add(set_i)
-                    for element in set_collection[set_i]:
-                        if element not in covered_elements:
-                            covered_elements.add(element)
-                        elements_occurrences = inverted_index.get(element)
-                        if set_i in elements_occurrences:
-                            elements_occurrences.remove(set_i)
-                            inverted_index[element] = elements_occurrences
-        if print_logs:
-            print("Set_collection: ", set_collection)
-            print("Set_lengths: ", set_lengths)
-            print("Subcollections: ", subcollections)
-
-        k -= 1
+            k -= 1
 
 
     if print_logs:
@@ -243,7 +244,7 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
     K = log(max(set_lengths), p)
     for k in range(1, math.ceil(K)+1):
         for i in range(len(set_lengths)):
-            if pow(p, k - 1) <= set_lengths[i] & set_lengths[i] < pow(p, k):
+            if round(pow(p, k - 1)) <= set_lengths[i] & set_lengths[i] < round(pow(p, k)):
                 subcollections[k].append(i)
 
     if print_params:
@@ -255,6 +256,8 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
         print("")
         print("K+1: ", str(K + 1))
         print("k: ", str(k), "  # After subcollectioning - also is the 'new' K")
+        print("p^K: ", str(pow(p, K)), "  # After subcollectioning")
+        print("p^K+1: ", str(pow(p, K+1)), "  # After subcollectioning")
     if print_output:
         print("\n---   ---   ---   ---   ---   ---")
         print("Subcollections:")
