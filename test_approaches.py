@@ -1,5 +1,5 @@
 import deterministic
-from text_coverage_data import sets_universe
+from text_coverage_data import sets_universe, wds_universe
 
 
 def percentage_of_solution_covering(elements, collection, solution_indices, print_details=False):
@@ -17,8 +17,9 @@ def percentage_of_solution_covering(elements, collection, solution_indices, prin
             solution_elements.add(j)
     percentage_overlapping = len(solution_elements) / len(elements)
     if print_details:
-        print("Elements that need to get covered:  ", elements)
-        print("Elements that actually got covered: ", solution_elements)
+        print("Elements that actually got covered: #", len(solution_elements), " | ", solution_elements)
+        print("Elements that need to get covered:  #", len(elements), " | ", elements)
+        print("That is an percentage of: ", percentage_overlapping*100, "%")
 
     return percentage_overlapping
 
@@ -71,14 +72,30 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    # solution = disk_friendly_greedy(sets_universe, p=1.05, print_logs=True)
-    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
-    print("\n+++++++")
-    print("Solution-indices:", solution_indices)
-    print("# Solution-indices:", len(solution_indices))
-    solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
-    print("Solution-sets: ", solution_sets)
-    print()
-    print("# Elements that need to get covered: ", len(wds_2))
-    result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices)
-    print("Result - are all elements covered by solution: ", result)
+
+    """
+    Test Set from Paper
+    """
+    if False:
+        solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
+        print("\n+++++++")
+        print("Solution-indices:", solution_indices)
+        print("# Solution-indices:", len(solution_indices))
+        solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
+        print("Solution-sets: ", solution_sets)
+        print()
+        result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices, True)
+
+
+    """
+    Final Set that is our aim to be covered
+    """
+    if True:
+        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p=1.05, print_logs=True)
+        print("\n+++++++")
+        print("Solution-indices:", solution_indices)
+        print("# Solution-indices:", len(solution_indices))
+        solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+        print("Solution-sets: ", solution_sets)
+        print()
+        result = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices, True)
