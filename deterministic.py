@@ -127,9 +127,15 @@ def disk_friendly_greedy(elements, sets, p, print_logs=False):
                                     set_lengths[set_i] -= 1
 
                         if not is_set_length_higherequal_pk_lower(pk_lower, set_i, set_lengths):
-                            # TODO reformat this! this has to calculate the true k so that the new subcoll can be determinded
-                            next_col = subcollections.get(k-1)
-                            subcollections[k-1] = next_col  # (c)
+                            current_col = subcollections.get(k)
+                            current_col.remove(set_i)
+                            if set_lengths[set_i] != 0:
+                                new_k = int(math.ceil(log(set_lengths[set_i], p)))+1
+                                # b = pow(p, new_k - 1) <= set_lengths[set_i] & set_lengths[set_i] < pow(p, new_k)
+
+                                next_col = subcollections.get(new_k)
+                                next_col.append(set_i)
+                                subcollections[k-1] = next_col  # (c)
                             continue
 
                     solution_indices.add(set_i)
