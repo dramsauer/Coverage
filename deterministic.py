@@ -24,9 +24,6 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution list containing a sub-collection of indices of set_collection
     """
-    set_collection = deepcopy(sets)
-    print("Selected p-Value: ", p)
-    print("Number of sets for covering: ", str(len(set_collection)), "\n")
 
     # List of important variables, constants and lists:
     #
@@ -45,6 +42,12 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     print("+----------------------+")
     print("| Disk-Friendly Greedy |")
     print("+----------------------+\n")
+
+    set_collection = deepcopy(sets)
+    print("Selected p-Value: ", p)
+    print("Number of sets for covering: ", str(len(set_collection)), "\n")
+
+
 
     """
     Pre-processes
