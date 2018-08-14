@@ -25,6 +25,8 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     :return: solution list containing a sub-collection of indices of set_collection
     """
     set_collection = deepcopy(sets)
+    print("Selected p-Value: ", p)
+    print("Number of sets for covering: ", str(len(set_collection)))
 
     # List of important variables, constants and lists:
     #

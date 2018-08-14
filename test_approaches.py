@@ -94,8 +94,8 @@ if __name__ == "__main__":
     """
 
 
-    headline = "p, Amount of sets in solution (indices), Elements that actually got covered, " \
-               "Elements that need to get covered, Percentage, Time elapsed in sec"
+    headline = "p,Amount of sets in solution (indices),Elements that actually got covered," \
+               "Elements that need to get covered,Percentage,Time elapsed in sec"
 
     file = "deterministic_dfg.csv"
     f = open(file, "w")
@@ -112,8 +112,9 @@ if __name__ == "__main__":
 
         sol_length, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
 
-        values = str(p) + str(sol_length) + str(elements_len) + str(percentage) + str(execution_time) + "\n"
+        values = str(p) + "," + str(sol_length) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
         f.write(values)
+        print(headline)
         print(values)
 
     f.close()
