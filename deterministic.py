@@ -1,5 +1,6 @@
 import math
 from collections import defaultdict
+from copy import deepcopy
 from math import log
 
 from text_coverage_data import sets_universe
@@ -9,7 +10,7 @@ from text_coverage_data import sets_universe
 
 # Greedy Heuristic
 # TODO remove elements; update numbers then (1),(2),...
-def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
+def disk_friendly_greedy(elements, sets, p, print_logs=False):
     """
     An special implementation of the greedy algorithm to cover large data sets. It is based on building
     sub-collections by the size of the sets given which might be faster for modern data sizes.
@@ -19,12 +20,12 @@ def disk_friendly_greedy(elements, set_collection, p, print_logs=False):
         http://dimacs.rutgers.edu/~graham/pubs/papers/ckw.pdf
 
     :param elements: universe of len_elements items to be covered; = wds_universe   (1)
-    :param set_collection: collection of len_set_collection subsets; = sets_universe (2)
+    :param sets: / set_collection: collection of len_set_collection subsets / and a copy of it; = sets_universe (2)
     :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor (3)
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution list containing a sub-collection of indices of set_collection
     """
-
+    set_collection = deepcopy(sets)
     # List of important variables, constants and lists:
     #
     # elements          (1)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
