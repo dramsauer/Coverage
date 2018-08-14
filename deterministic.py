@@ -158,7 +158,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
 
     # 2. Loop in the algorithm.
     # The last remaining subcollection is that one that only contains sets with set_length = 1.
-    print("\nSecond Loop.")
+    print("\nSecond loop.")
     try:
         for set_i in subcollections.get(1):
             for element in covered_elements:

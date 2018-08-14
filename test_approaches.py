@@ -101,7 +101,7 @@ if __name__ == "__main__":
     f = open(file, "w")
     f.write(headline)
 
-    for p in np.arange(1.05, 2.00, 0.05):
+    for p in np.arange(1.05, 2.05, 0.05):
 
         start = time.time()
         solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
