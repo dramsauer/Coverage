@@ -97,7 +97,7 @@ if __name__ == "__main__":
     headline = "p,Amount of sets in solution (indices),Elements that actually got covered," \
                "Elements that need to get covered,Percentage,Time elapsed in sec\n"
 
-    file = "deterministic_dfg.csv"
+    file = "deterministic_dfg_0.05.csv"
     f = open(file, "w")
     f.write(headline)
 
@@ -109,10 +109,34 @@ if __name__ == "__main__":
         execution_time = round(end - start, ndigits=3)
 
         #solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+        solution_indices_len = len(solution_indices)
+        solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
 
-        sol_length, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+        values = str(round(p, ndigits=2)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+        f.write(values)
+        print(headline)
+        print(values)
 
-        values = str(round(p, ndigits=2)) + "," + str(sol_length) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+    f.close()
+
+
+    file_2 = "deterministic_dfg_0.001.csv"
+    f = open(file_2, "w")
+    f.write(headline)
+
+    for p in np.arange(1.001, 1.100, 0.001):
+        start = time.time()
+        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
+        end = time.time()
+        execution_time = round(end - start, ndigits=3)
+
+        # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+        solution_indices_len = len(solution_indices)
+        solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                 solution_indices)
+
+        values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
+            elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
         f.write(values)
         print(headline)
         print(values)
