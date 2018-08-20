@@ -172,7 +172,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     return solution_indices
 
 
-def is_set_length_higherequal_pk_lower(pk_lower, set_i, set_lengths):
+def is_set_length_higher_or_equal_pk_lower(pk_lower, set_i, set_lengths):
     set_length_bigger_pk_lower = set_lengths[set_i] >= pk_lower
     return set_length_bigger_pk_lower
 
