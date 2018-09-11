@@ -6,10 +6,6 @@ from math import log
 from text_coverage_data import sets_universe
 
 
-# Greedy / GA
-
-# Greedy Heuristic
-# TODO remove elements; update numbers then (1),(2),...
 def disk_friendly_greedy(sets, p, print_logs=False):
     """
     An special implementation of the greedy algorithm to cover large data sets. It is based on building
@@ -27,15 +23,15 @@ def disk_friendly_greedy(sets, p, print_logs=False):
 
     # List of important variables, constants and lists:
     #
-    # set_collection    (1)     <class 'list'> containing 'set's [{'C', 'B', 'A'}, {'G', 'H'}, {'H', 'E'}, {'I'}, {'E'}]
+    # set_collection    (1)     <class 'list'> containing 'set's
     # p                 (2)     float
     #
-    # solution_indices  (3)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
-    # covered_elements  (4)     <class 'set'>                    { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' }
+    # solution_indices  (3)     <class 'set'>
+    # covered_elements  (4)     <class 'set'>
     #
-    # inverted_index    (5)     defaultdict(<class 'list'>, {'F': [1, 2], 'G': [1, 2, 3, 4], 'H': [4, 5], 'I': [6, 9]})
-    # set_lengths       (6)     <class 'list'>  containing same i's as (2)      [5, 5, 3, 3, 2, 2, 2, 1, 1, 1]
-    # subcollections    (7)     <class 'list'>  containing set's [{8, 9, 7}, {2, 3, 4, 5, 6}, {0, 1}]
+    # inverted_index    (5)     defaultdict(<class 'list'>) Example: {'F': [1, 2], 'G': [1, 2, 3, 4], 'H': [4, 5], 'I': [6, 9]}
+    # set_lengths       (6)     <class 'list'>  containing same indices i as in (2)
+    # subcollections    (7)     <class 'list'>  containing set's Example: [{8, 9, 7}, {2, 3, 4, 5, 6}, {0, 1}]
     #
     # k and K           (8a,8b) int's
 
@@ -43,8 +39,8 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     print("| Disk-Friendly Greedy |")
     print("+----------------------+\n")
 
-    set_collection = deepcopy(sets)
-    print("Selected p-Value: ", p)
+    set_collection = deepcopy(sets) # (1)
+    print("Selected p-Value: ", p)  # (2)
     print("Number of sets for covering: ", str(len(set_collection)), "\n")
 
 
@@ -143,10 +139,6 @@ def disk_friendly_greedy(sets, p, print_logs=False):
                             if set_i in elements_occurrences:
                                 elements_occurrences.remove(set_i)
                                 inverted_index[element] = elements_occurrences
-            # if print_logs:
-            # print("Set_collection: ", set_collection)
-            # print("Set_lengths: ", set_lengths)
-            # print("Subcollections: ", subcollections)
         except TypeError:
             pass
         k -= 1
