@@ -1,3 +1,8 @@
 # TextCoverageProblem
 
-Running the text_coverage_data.py script will import the nltk package, offer the download for the "reuters" corpus, and perform simple processing of this corpus to generate a "universe" of elements to be covered, (words); and sets to choose from to cover them (sentences).
+## Abstract
+The Set Cover Problem is a research issue in computer science with a lot of applications e.g.
+in machine learning, data mining and information retrieval. It is about selecting as few sets as
+possible from a collection that cover some universe. The aim of this project is to compare two
+approaches - a deterministic one and a statistical - and to rate them by concerns of coverage
+rate and computation time.
