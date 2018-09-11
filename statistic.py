@@ -1,6 +1,6 @@
+import random
 from copy import deepcopy
 
-from preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 
 
@@ -37,17 +37,21 @@ def greedy(sets, elements):
     """
     Initialization & Pre-processes
     """
-    print("Initialization.")
 
+
+    print("Initialization.")
 
     set_collection = deepcopy(sets)
     words_to_cover = deepcopy(elements)
+    amount_words = len(words_to_cover)
 
     solution_indices = set()
 
-    set_lengths = compute_set_lengths(set_collection)
+    # 1. Select randomly one of the words, that need to be covered
+    random_word = words_to_cover[random.randint(0, amount_words)]
 
-
+    # 2. Select first set
+    set = set_collection.pop()
 
 
     return solution_indices
