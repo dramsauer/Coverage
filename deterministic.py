@@ -46,9 +46,9 @@ def disk_friendly_greedy(sets, p, print_logs=False):
 
 
     """
-    Pre-processes
+    Initialization & Pre-processes
     """
-    print("Pre-processes.")
+    print("Initialization.")
 
 
     # Lists for saving the solution-subcollection and the so-far-covered elements
