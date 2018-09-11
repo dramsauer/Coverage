@@ -97,7 +97,7 @@ if __name__ == "__main__":
     headline = "p,Amount of sets in solution (indices),Elements that actually got covered," \
                "Elements that need to get covered,Percentage,Time elapsed in sec\n"
 
-    file = "deterministic_dfg_0.05.csv"
+    file = "results/deterministic_dfg_0.05.csv"
     f = open(file, "w")
     f.write(headline)
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     f.close()
 
 
-    file_2 = "deterministic_dfg_0.001.csv"
+    file_2 = "results/deterministic_dfg_0.001.csv"
     f = open(file_2, "w")
     f.write(headline)
 
