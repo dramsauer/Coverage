@@ -1,4 +1,4 @@
-# TextCoverageProblem
+# Comparison of solution approaches for the Set Cover Problem
 
 ## Abstract
 The Set Cover Problem is a research issue in computer science with a lot of applications e.g.
