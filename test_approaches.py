@@ -94,51 +94,77 @@ if __name__ == "__main__":
     """
 
 
-    headline = "p,Amount of sets in solution (indices),Elements that actually got covered," \
-               "Elements that need to get covered,Percentage,Time elapsed in sec\n"
-
-    file = "results/deterministic_dfg_0.05.csv"
-    f = open(file, "w")
-    f.write(headline)
-
-    for p in np.arange(1.05, 2.05, 0.05):
-
-        start = time.time()
-        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
-        end = time.time()
-        execution_time = round(end - start, ndigits=3)
-
-        #solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-        solution_indices_len = len(solution_indices)
-        solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
-
-        values = str(round(p, ndigits=2)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
-        f.write(values)
-        print(headline)
-        print(values)
-
-    f.close()
+    headline = "p,Amount of sets in solution (indices),Covered Elements," \
+               "Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
 
-    file_2 = "results/deterministic_dfg_0.001.csv"
-    f = open(file_2, "w")
-    f.write(headline)
+    if False:
+        file = "results/deterministic_dfg_0.05.csv"
+        f = open(file, "w")
+        f.write(headline)
 
-    for p in np.arange(1.001, 1.100, 0.001):
-        start = time.time()
-        solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
-        end = time.time()
-        execution_time = round(end - start, ndigits=3)
+        for p in np.arange(1.05, 2.05, 0.05):
 
-        # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-        solution_indices_len = len(solution_indices)
-        solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
-                                                                                 solution_indices)
+            start = time.time()
+            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
+            end = time.time()
+            execution_time = round(end - start, ndigits=3)
 
-        values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
-            elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
-        f.write(values)
-        print(headline)
-        print(values)
+            #solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_indices_len = len(solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
 
-    f.close()
+            values = str(round(p, ndigits=2)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            f.write(values)
+            print(headline)
+            print(values)
+
+        f.close()
+
+    if False:
+        file_2 = "results/deterministic_dfg_0.001.csv"
+        f = open(file_2, "w")
+        f.write(headline)
+
+        for p in np.arange(1.001, 1.100, 0.001):
+            start = time.time()
+            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
+            end = time.time()
+            execution_time = round(end - start, ndigits=3)
+
+            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_indices_len = len(solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                     solution_indices)
+
+            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
+                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            f.write(values)
+            print(headline)
+            print(values)
+
+        f.close()
+
+    if True:
+        file = "results/deterministic_dfg_0.001.csv"
+        f = open(file, "w")
+        f.write(headline)
+
+        for p in np.arange(1.001, 2.000, 0.001):
+            start = time.time()
+            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
+            end = time.time()
+            execution_time = round(end - start, ndigits=3)
+
+            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_indices_len = len(solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                     solution_indices)
+
+            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
+                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            f.write(values)
+            print(headline)
+            print(values)
+
+        f.close()
