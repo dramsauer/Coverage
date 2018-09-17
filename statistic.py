@@ -53,7 +53,7 @@ def greedy(sets, elements, print_logs=False):
     solution_indices = list()
 
     # Iterating over all words that need to get covered (= step 3 in paper also)
-    while words_to_cover is not None:
+    while amount_words > 0:
         # 1. Select randomly one of the words
         random_word = words_to_cover[random.randint(0, amount_words)]
 
