@@ -56,7 +56,7 @@ def greedy(sets, elements, print_logs=False):
     print("\nInitialization.")
 
     set_collection = deepcopy(sets)
-    sorted_collection, comparison_dict = sort_collection_by_set_sizes_with_comparison_dict(set_collection)
+    sorted_collection, comparison_list = sort_collection_by_set_sizes_with_comparison_list(set_collection)
 
     words_to_cover = list(deepcopy(elements))
     amount_words = len(words_to_cover)
@@ -73,24 +73,38 @@ def greedy(sets, elements, print_logs=False):
     # Iterating over all words that need to get covered (= step 3 in paper also)
     while amount_words > 0:
         # 1. Select randomly one of the words
-        random_word = words_to_cover[random.randint(0, amount_words)]
+        random_index = random.randint(0, amount_words-1)
+        random_word = words_to_cover[random_index]
 
         # 2. Select first set in natural order
-        for set in sorted_collection:
+        for set_i in sorted_collection:
             # If the random word is part of the current chosen set,
             # then add the index of the set to solution_indices
-            if random_word in set:
-                original_set_index = comparison_dict.get(sorted_collection.index(set))
-                solution_indices.append(original_set_index)
+            if random_word in set_i:
 
+                sorted_set_index = sorted_collection.index(set_i)
+                original_set_index = comparison_list[sorted_set_index]
+                #print("Set: ", set_i)
+                #print("Sorted Set Index: ", sorted_set_index)
+                #print("------------------------")
+                #print("Original Index:   ", original_set_index)
+                #print("Set: ", set_collection[original_set_index])
+                #print()
+
+                solution_indices.append(original_set_index)
                 break
+
         words_to_cover.remove(random_word)
         amount_words -= 1
+
+
+
+    if print_logs:
+        print("Amount of indices in Greedy-Solution: ", len(solution_indices), "\n")
+
     # 4. Remove redundant entries in list by saving it as a set
     solution_indices = set(solution_indices)
 
-    if print_logs:
-        print("Amount of indices in Greedy-Solution: ", len(solution_indices))
     return solution_indices
 
 
