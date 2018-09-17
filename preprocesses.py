@@ -1,4 +1,4 @@
-from collections import defaultdict
+import collections
 
 
 def build_inverted_index(set_collection, print_output=False):
@@ -17,7 +17,7 @@ def build_inverted_index(set_collection, print_output=False):
 
     """
     print("Building an Inverted Index of given sets...")
-    index = defaultdict(list)
+    index = collections.defaultdict(list)
     for i in range(len(set_collection)):
         for word in set_collection[i]:
             index[word].append(i)
@@ -49,3 +49,43 @@ def compute_set_lengths(set_collection):
     for i in range(len(set_collection)):
         set_lengths.append(len(set_collection[i]))
     return set_lengths
+
+
+def sort_collection_by_set_sizes(set_collection):
+    """
+    Sort a given collection by the size of sets in it by using a dictionary
+    :param set_collection: collection of sets
+    :return: sorted collection
+    """
+    set_length_dict = create_set_length_dict(set_collection)
+
+    print("Creating sorted list from dict...")
+    sorted_list = list()
+    i = min(set_length_dict)
+    while i <= max(set_length_dict):
+        if set_length_dict.get(i) is not None:
+            for set in set_length_dict.get(i):
+                sorted_list.append(set_collection[set])
+        i += 1
+
+    return sorted_list
+
+
+def create_set_length_dict(set_collection):
+    """
+    Builds a dictionary from a collection of sets with the set sizes as keys
+    :param set_collection: collection of sets
+    :return: the size-dictionary
+    """
+    print("Building a dictionary of given sets with their lengths as keys:")
+    set_length_dict = collections.defaultdict(list)
+    lengths = compute_set_lengths(set_collection)
+    i = 0
+    while i < len(lengths):
+        set_length_dict[lengths[i]].append(i)
+        i += 1
+    return set_length_dict
+
+
+if __name__ == "__main__":
+    lol = 0

@@ -146,11 +146,11 @@ if __name__ == "__main__":
         f.close()
 
     if True:
-        file = "results/deterministic_dfg_0.001.csv"
+        file = "results/deterministic_dfg_results.csv"
         f = open(file, "w")
         f.write(headline)
 
-        for p in np.arange(1.001, 2.000, 0.001):
+        for p in np.arange(1.005, 2.000, 0.005):
             start = time.time()
             solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
             end = time.time()
