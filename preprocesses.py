@@ -53,14 +53,13 @@ def compute_set_lengths(set_collection):
     return set_lengths
 
 
-def sort_collection_by_set_sizes(set_collection, return_comparison_dict=False):
+def sort_collection_by_set_sizes(set_collection):
     """
     Sort a given collection by the size of sets in it by using a dictionary
     :param set_collection: collection of sets
     :return: sorted collection
     """
     set_length_dict = create_set_length_dict(set_collection)
-    comparison_dict = collections.defaultdict()
 
     print("Creating sorted list from dict...")
     sorted_list = list()
@@ -69,35 +68,31 @@ def sort_collection_by_set_sizes(set_collection, return_comparison_dict=False):
         if set_length_dict.get(i) is not None:
             for set in set_length_dict.get(i):
                 sorted_list.append(set_collection[set])
-                comparison_dict[len(sorted_list)-1] = set_length_dict.get(i)
         i += 1
-
-    if return_comparison_dict:
-        return sorted_list, comparison_dict
-    else:
-        return sorted_list
+    return sorted_list
 
 
-def sort_collection_by_set_sizes_with_comparison_dict(set_collection):
+def sort_collection_by_set_sizes_with_comparison_list(set_collection):
     """
     Sort a given collection by the size of sets in it by using a dictionary
     :param set_collection: collection of sets
     :return: sorted collection and comparison dict(key: new index of a set, value: original index)
     """
     set_length_dict = create_set_length_dict(set_collection)
-    comparison_dict = collections.defaultdict()
 
-    print("Creating sorted list from dict...")
+    print("Creating sorted list and list for comparing from dict...")
     sorted_list = list()
+    comparison_list = list()
+
     i = min(set_length_dict)
     while i <= max(set_length_dict):
         if set_length_dict.get(i) is not None:
             for set in set_length_dict.get(i):
                 sorted_list.append(set_collection[set])
-                comparison_dict[len(sorted_list)-1] = set_length_dict.get(i)
+                comparison_list.append(set)
         i += 1
 
-    return sorted_list, comparison_dict
+    return sorted_list, comparison_list
 
 
 def create_set_length_dict(set_collection):
@@ -117,5 +112,14 @@ def create_set_length_dict(set_collection):
 
 
 if __name__ == "__main__":
-    bla = create_set_length_dict(sets_universe)
-    print(bla.get(69))
+    sort, comp = sort_collection_by_set_sizes_with_comparison_list(sets_universe)
+
+    print("the:", sets_universe[189])
+    print("254 shall be 189:", comp[254])
+    print("apr: ", sets_universe[701])
+    print("255 shall be 701:", comp[255])
+    print("energy: ", sets_universe[731])
+    print("256 shall be 731:", comp[256])
+    print("reuter: ", sets_universe[1517])
+    print("257 shall be 1517:", comp[257])
+
