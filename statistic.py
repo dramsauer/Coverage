@@ -42,7 +42,7 @@ def greedy(sets, elements):
     print("Initialization.")
 
     set_collection = deepcopy(sets)
-    words_to_cover = deepcopy(elements)
+    words_to_cover = list(deepcopy(elements))
     amount_words = len(words_to_cover)
 
     solution_indices = set()
@@ -51,8 +51,14 @@ def greedy(sets, elements):
     random_word = words_to_cover[random.randint(0, amount_words)]
 
     # 2. Select first set
-    set = set_collection.pop()
-
+    for set in set_collection:
+        # If the random word is part of the current chosen set,
+        # then add the index of the set to solution_indices
+        if random_word in set:
+            print(random_word)
+            print(set_collection.index(set))
+            solution_indices.add(set_collection.index(set))
+            break
 
     return solution_indices
 
@@ -98,6 +104,13 @@ if __name__ == "__main__":
 
     solution = simulated_annealing(sets_universe, wds_universe, print_logs=False)
     # solution = simulated_annealing(test_sets_2, wds_2, print_logs=False)
-    print("\n+++++++")
-    print("Solution:")
-    print(solution)
+    #print("\n+++++++")
+    #print("Solution:")
+    #print(solution)
+
+    # #solution = simulated_annealing(sets_universe, wds_universe, print_logs=False)
+    # solution = simulated_annealing(test_sets_2, wds_2, print_logs=False)
+    #print("\n+++++++")
+    #print("Solution:")
+    #print(solution)
+
