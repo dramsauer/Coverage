@@ -130,7 +130,7 @@ if __name__ == "__main__":
         f = open(file, "a")
         f.write(headline)
 
-        for i in range(1):
+        for i in range(10):
             start = time.time()
             solution_indices = statistic.greedy(sets_universe, wds_universe, True)
             end = time.time()
@@ -141,15 +141,6 @@ if __name__ == "__main__":
             # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
             print(headline)
-            print(i, ",",
-                  solution_indices_len, ",",
-                  solution_len, ",",
-                  elements_len, ",",
-                  percentage, ",",
-                  execution_time, "\n", )
-            f.write(i, ",",
-                    solution_indices_len, ",",
-                    solution_len, ",",
-                    elements_len, ",",
-                    percentage, ",",
-                    execution_time, "\n", )
+            values = str(i) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            print(values)
+            f.write(values)
