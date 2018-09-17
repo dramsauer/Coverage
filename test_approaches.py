@@ -1,8 +1,7 @@
 import time
 
-import numpy as np
-
 import deterministic
+import statistic
 from text_coverage_data import sets_universe, wds_universe
 
 
@@ -32,19 +31,8 @@ def get_set_list_of_solution_indices(collection, solution_indices):
     return sets
 
 
-if __name__ == "__main__":
-    print("")
-
-    """
-    Execution of the disk-friendly greedy algorithm &
-    for the given set cover problem.
-    The set collection is contained in sets_universe,
-    the elements to cover are stored in wds_universe.
-
-    2 Test sets are also prepared further down.
-    """
-
-
+def testing_on_example_data():
+    global solution_indices
     # Test set containing only a partition of sets_universe:
     test_sets_1 = [sets_universe[0],
                    sets_universe[1],
@@ -68,103 +56,100 @@ if __name__ == "__main__":
         {'A'},
         {'E'},
         {'I'}
-                   ]
+    ]
     wds_2 = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
-
-
     """
     Test Set from Paper
     """
-    if False:
-        solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
-        print("\n+++++++")
-        print("Solution-indices:", solution_indices)
-        print("# Solution-indices:", len(solution_indices))
-        solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
-        print("Solution-sets: ", solution_sets)
-        print()
-        result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices, True)
-        print(result)
 
+    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
+    print("\n+++++++")
+    print("Solution-indices:", solution_indices)
+    print("# Solution-indices:", len(solution_indices))
+    solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
+    print("Solution-sets: ", solution_sets)
+    print()
+    result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices, True)
+    print(result)
+
+
+if __name__ == "__main__":
+    print("")
+    # testing_on_example_data()
 
     """
-    Final Set that is our aim to be covered
+    Execution of the disk-friendly greedy algorithm &
+    for the given set cover problem.
+    The set collection is contained in sets_universe,
+    the elements to cover are stored in wds_universe.
+
     """
 
-
-    headline = "p,Amount of sets in solution (indices),Covered Elements," \
-               "Elements to be covered,Coverage Rate,Time elapsed in sec\n"
-
-
+    # Testing the Disk-Friendly-Greedy
     if False:
-        file = "results/deterministic_dfg_0.05.csv"
-        f = open(file, "w")
-        f.write(headline)
 
-        for p in np.arange(1.05, 2.05, 0.05):
+        headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
-            start = time.time()
-            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
-            end = time.time()
-            execution_time = round(end - start, ndigits=3)
-
-            #solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-            solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
-
-            values = str(round(p, ndigits=2)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
-            f.write(values)
-            print(headline)
-            print(values)
-
-        f.close()
-
-    if False:
-        file_2 = "results/deterministic_dfg_0.001.csv"
-        f = open(file_2, "w")
-        f.write(headline)
-
-        for p in np.arange(1.001, 1.100, 0.001):
-            start = time.time()
-            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
-            end = time.time()
-            execution_time = round(end - start, ndigits=3)
-
-            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-            solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
-                                                                                     solution_indices)
-
-            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
-                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
-            f.write(values)
-            print(headline)
-            print(values)
-
-        f.close()
-
-    if True:
         file = "results/deterministic_dfg_results.csv"
         f = open(file, "w")
         f.write(headline)
 
         for p in np.arange(1.005, 2.000, 0.005):
             start = time.time()
-            solution_indices = deterministic.disk_friendly_greedy(sets_universe, p, print_logs=False)
+            solution_indices = deterministic.disk_friendly_greedy(sets_universe, round(p, ndigits=4), print_logs=False)
             end = time.time()
+
             execution_time = round(end - start, ndigits=3)
-
-            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
             solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
-                                                                                     solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
-            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
-                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
-            f.write(values)
             print(headline)
-            print(values)
+            print(round(p, ndigits=4), ",",
+                  solution_indices_len, ",",
+                  solution_len, ",",
+                  elements_len, ",",
+                  percentage, ",",
+                  execution_time, "\n", )
+            f.write(round(p, ndigits=4), ",",
+                    solution_indices_len, ",",
+                    solution_len, ",",
+                    elements_len, ",",
+                    percentage, ",",
+                    execution_time, "\n", )
 
         f.close()
+
+    # Testing the greedy heuristic
+    if True:
+        headline = "Iteration,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
+
+        file = "results/greedy_results.csv"
+        f = open(file, "w")
+        f.write(headline)
+
+        for i in range(1):
+            start = time.time()
+            solution_indices = statistic.greedy(sets_universe, wds_universe, True)
+            end = time.time()
+
+            execution_time = round(end - start, ndigits=3)
+            solution_indices_len = len(solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+
+            print(headline)
+            print(i, ",",
+                  solution_indices_len, ",",
+                  solution_len, ",",
+                  elements_len, ",",
+                  percentage, ",",
+                  execution_time, "\n", )
+            f.write(i, ",",
+                    solution_indices_len, ",",
+                    solution_len, ",",
+                    elements_len, ",",
+                    percentage, ",",
+                    execution_time, "\n", )

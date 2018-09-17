@@ -1,5 +1,7 @@
 import collections
 
+from text_coverage_data import sets_universe
+
 
 def build_inverted_index(set_collection, print_output=False):
     """
@@ -51,13 +53,14 @@ def compute_set_lengths(set_collection):
     return set_lengths
 
 
-def sort_collection_by_set_sizes(set_collection):
+def sort_collection_by_set_sizes(set_collection, return_comparison_dict=False):
     """
     Sort a given collection by the size of sets in it by using a dictionary
     :param set_collection: collection of sets
     :return: sorted collection
     """
     set_length_dict = create_set_length_dict(set_collection)
+    comparison_dict = collections.defaultdict()
 
     print("Creating sorted list from dict...")
     sorted_list = list()
@@ -66,9 +69,35 @@ def sort_collection_by_set_sizes(set_collection):
         if set_length_dict.get(i) is not None:
             for set in set_length_dict.get(i):
                 sorted_list.append(set_collection[set])
+                comparison_dict[len(sorted_list)-1] = set_length_dict.get(i)
         i += 1
 
-    return sorted_list
+    if return_comparison_dict:
+        return sorted_list, comparison_dict
+    else:
+        return sorted_list
+
+
+def sort_collection_by_set_sizes_with_comparison_dict(set_collection):
+    """
+    Sort a given collection by the size of sets in it by using a dictionary
+    :param set_collection: collection of sets
+    :return: sorted collection and comparison dict(key: new index of a set, value: original index)
+    """
+    set_length_dict = create_set_length_dict(set_collection)
+    comparison_dict = collections.defaultdict()
+
+    print("Creating sorted list from dict...")
+    sorted_list = list()
+    i = min(set_length_dict)
+    while i <= max(set_length_dict):
+        if set_length_dict.get(i) is not None:
+            for set in set_length_dict.get(i):
+                sorted_list.append(set_collection[set])
+                comparison_dict[len(sorted_list)-1] = set_length_dict.get(i)
+        i += 1
+
+    return sorted_list, comparison_dict
 
 
 def create_set_length_dict(set_collection):
@@ -88,4 +117,5 @@ def create_set_length_dict(set_collection):
 
 
 if __name__ == "__main__":
-    lol = 0
+    bla = create_set_length_dict(sets_universe)
+    print(bla.get(69))

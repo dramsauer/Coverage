@@ -45,7 +45,7 @@ def greedy(sets, elements, print_logs=False):
     """
 
     set_collection = deepcopy(sets)
-    sorted_collection = sort_collection_by_set_sizes(set_collection)
+    sorted_collection, comparison_dict = sort_collection_by_set_sizes_with_comparison_dict(set_collection)
 
     words_to_cover = list(deepcopy(elements))
     amount_words = len(words_to_cover)
@@ -62,13 +62,12 @@ def greedy(sets, elements, print_logs=False):
             # If the random word is part of the current chosen set,
             # then add the index of the set to solution_indices
             if random_word in set:
-                print(random_word)
-                print(set_collection.index(set))
-                solution_indices.append(sorted_collection.index(set))
+                original_set_index = comparison_dict.get(sorted_collection.index(set))
+                solution_indices.append(original_set_index)
 
                 break
         words_to_cover.remove(random_word)
-
+        amount_words -= 1
     # 4. Remove redundant entries in list by saving it as a set
     solution_indices = set(solution_indices)
 
