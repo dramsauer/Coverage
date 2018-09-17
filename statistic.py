@@ -18,6 +18,15 @@ def simulated_annealing(sets, elements, print_logs=False):
     print("| Simulated Annealing  |")
     print("+----------------------+\n")
 
+
+
+    """
+    Initialization & Pre-processes
+    """
+
+
+    print("Initialization.")
+    print("Finding a feasable solution via greedy heuristic...")
     feasable_greedy_solution = greedy(sets_universe, wds_universe, print_logs)
 
     solution_indices = set()
@@ -35,14 +44,6 @@ def greedy(sets, elements, print_logs=False):
     :return: solution set containing a sub-collection of indices of set_collection
     """
 
-
-    """
-    Initialization & Pre-processes
-    """
-
-
-    print("Initialization.")
-
     set_collection = deepcopy(sets)
     sorted_collection = sort_collection_by_set_sizes(set_collection)
 
@@ -51,18 +52,25 @@ def greedy(sets, elements, print_logs=False):
 
     solution_indices = list()
 
-    # 1. Select randomly one of the words, that need to be covered
-    random_word = words_to_cover[random.randint(0, amount_words)]
+    # Iterating over all words that need to get covered (= step 3 in paper also)
+    while words_to_cover is not None:
+        # 1. Select randomly one of the words
+        random_word = words_to_cover[random.randint(0, amount_words)]
 
-    # 2. Select first set
-    for set in reversed(sorted_collection):
-        # If the random word is part of the current chosen set,
-        # then add the index of the set to solution_indices
-        if random_word in set:
-            print(random_word)
-            print(set_collection.index(set))
-            solution_indices.append(sorted_collection.index(set))
-            break
+        # 2. Select first set in natural order
+        for set in sorted_collection:
+            # If the random word is part of the current chosen set,
+            # then add the index of the set to solution_indices
+            if random_word in set:
+                print(random_word)
+                print(set_collection.index(set))
+                solution_indices.append(sorted_collection.index(set))
+
+                break
+        words_to_cover.remove(random_word)
+
+    # 4. Remove redundant entries in list by saving it as a set
+    solution_indices = set(solution_indices)
 
     return solution_indices
 
