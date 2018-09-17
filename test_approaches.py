@@ -106,19 +106,10 @@ if __name__ == "__main__":
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
             # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
+            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(headline)
-            print(round(p, ndigits=4), ",",
-                  solution_indices_len, ",",
-                  solution_len, ",",
-                  elements_len, ",",
-                  percentage, ",",
-                  execution_time, "\n", )
-            f.write(round(p, ndigits=4), ",",
-                    solution_indices_len, ",",
-                    solution_len, ",",
-                    elements_len, ",",
-                    percentage, ",",
-                    execution_time, "\n", )
+            print(values)
+            f.write(values)
 
         f.close()
 
