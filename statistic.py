@@ -43,6 +43,17 @@ def greedy(sets, elements, print_logs=False):
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution set containing a sub-collection of indices of set_collection
     """
+    print()
+    print("+------------------+")
+    print("| Greedy Heuristic |")
+    print("+------------------+\n")
+
+
+    """
+    Initialization & Pre-processes
+    """
+
+    print("\nInitialization.")
 
     set_collection = deepcopy(sets)
     sorted_collection, comparison_dict = sort_collection_by_set_sizes_with_comparison_dict(set_collection)
@@ -51,6 +62,13 @@ def greedy(sets, elements, print_logs=False):
     amount_words = len(words_to_cover)
 
     solution_indices = list()
+
+    """
+    Main-Algorithm
+    """
+
+    print("\nLoop.")
+    print("Iterating over all words that need to get covered...")
 
     # Iterating over all words that need to get covered (= step 3 in paper also)
     while amount_words > 0:
@@ -71,6 +89,8 @@ def greedy(sets, elements, print_logs=False):
     # 4. Remove redundant entries in list by saving it as a set
     solution_indices = set(solution_indices)
 
+    if print_logs:
+        print("Amount of indices in Greedy-Solution: ", len(solution_indices))
     return solution_indices
 
 
