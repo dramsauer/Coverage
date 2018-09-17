@@ -93,7 +93,7 @@ if __name__ == "__main__":
         headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "results/deterministic_dfg_results.csv"
-        f = open(file, "w")
+        f = open(file, "a")
         f.write(headline)
 
         for p in np.arange(1.005, 2.000, 0.005):
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         headline = "Iteration,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "results/greedy_results.csv"
-        f = open(file, "w")
+        f = open(file, "a")
         f.write(headline)
 
         for i in range(1):
