@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
         headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
-        file = "results/deterministic_dfg_results.csv"
+        file = "out/deterministic_dfg_results.csv"
         f = open(file, "a")
         f.write(headline)
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     if True:
         headline = "Iteration,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
-        file = "results/greedy_results.csv"
+        file = "out/greedy_results.csv"
         f = open(file, "a")
         f.write(headline)
 
