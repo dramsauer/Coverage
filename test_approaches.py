@@ -2,7 +2,6 @@ import os
 import time
 
 from src.disk_friendly_greedy import *
-from src.preprocesses import *
 from src.simulated_annealing import *
 from text_coverage_data import sets_universe, wds_universe
 
@@ -76,6 +75,8 @@ def testing_on_example_data():
 if __name__ == "__main__":
     print("")
     # testing_on_example_data()
+    #print("wds: ", wds_universe.__class__)
+    #print("sets: ", sets_universe.__class__)
 
     """
     Execution of the disk-friendly-greedy algorithm &
@@ -114,7 +115,7 @@ if __name__ == "__main__":
         f.close()
 
     # Testing the greedy_by_balas heuristic
-    if False:
+    if True:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/greedy_results.csv"
@@ -122,9 +123,9 @@ if __name__ == "__main__":
         if os.stat(file).st_size == 0:
             f.write(headline)
 
-        for i in range(1):
+        for i in range(3):
             start = time.time()
-            solution_indices = greedy_by_balas(sets_universe, wds_universe, True)
+            solution_indices = greedy_by_balas(list(sets_universe), list(wds_universe), True)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)
@@ -136,10 +137,9 @@ if __name__ == "__main__":
             values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(values)
             f.write(values)
-            print(solution_indices.__class__)
 
     # Testing the simulated annealing
-    if True:
+    if False:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
@@ -161,4 +161,3 @@ if __name__ == "__main__":
             values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(values)
             f.write(values)
-            print(solution_indices.__class__)
