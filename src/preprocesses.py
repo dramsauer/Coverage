@@ -40,6 +40,21 @@ def build_inverted_index(set_collection, print_output=False):
     return index
 
 
+def get_sum_of_all_set_sizes_of_solution_indices(collection, solution_indices):
+    """
+    Creating a list of sets and then sum up their sizes and returning them
+    :param collection: the sets_universe
+    :param solution_indices: iterable containing indices of sets (in a solution) which is represents a sub-collection of collection
+    :return: sum of sizes
+    """
+    size = 0
+    sets = get_set_list_of_solution_indices(collection, solution_indices)
+    for s in sets:
+        size += len(s)
+
+    return size
+
+
 def get_set_list_of_solution_indices(collection, solution_indices):
     """
     Getting a list of sets from a list of indices (of a solution)
