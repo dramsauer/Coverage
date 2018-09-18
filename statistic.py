@@ -5,11 +5,19 @@ from preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 
 
-def simulated_annealing(sets, elements, print_logs=False):
+def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print_logs=False):
     """
-    Find a feasible solution for the set cover problem with greedy heuristic.
+    Find a feasible solution for the set cover problem with greedy heuristic and optimize the solution via
+    simulated annealing.
+
+    This algorithm is the main contribution of:
+        Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
+        Naval Research Logistics (NRL), 42(7), 1129-1140.
+
     :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe (1)
     :param elements: set of words/elements to be covered.
+    :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
+    :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution set containing a sub-collection of indices of set_collection
     """
@@ -24,12 +32,20 @@ def simulated_annealing(sets, elements, print_logs=False):
     Initialization & Pre-processes
     """
 
-
-    print("Initialization.")
+    print("Preprocesses.")
     print("Finding a feasable solution via greedy heuristic...")
     feasable_greedy_solution = greedy(sets_universe, wds_universe, print_logs)
 
+
+
+    print("Initialization.")
     solution_indices = set()
+
+    set_lengths = compute_set_lengths(get_set_list_of_solution_indices(feasable_greedy_solution))
+    d = 0
+    D = neighbourhood_scale * len(feasable_greedy_solution)
+    E = search_depth * max(set_lengths)
+
 
 
     return solution_indices
@@ -38,15 +54,21 @@ def simulated_annealing(sets, elements, print_logs=False):
 def greedy(sets, elements, print_logs=False):
     """
     Find a feasible solution for the set cover problem with greedy heuristic.
+
+    This algorithm was found in:
+        Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
+        Naval Research Logistics (NRL), 42(7), 1129-1140.
+    They based this algorithm on an approach by:
+        Balas, E., & Ho, A. (1980). Set covering algorithms using cutting planes, heuristics, and subgradient
+        optimization: a computational study. In Combinatorial optimization (pp. 37-60). Springer, Berlin, Heidelberg.
     :param sets: collection of sets; with set_collection as a copy of it
     :param elements: set of words/elements to be covered; with words_to_cover as a copy of it
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution set containing a sub-collection of indices of set_collection
     """
     print()
-    print("+------------------+")
     print("| Greedy Heuristic |")
-    print("+------------------+\n")
+    print()
 
 
     """
@@ -147,7 +169,7 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    solution = simulated_annealing(sets_universe, wds_universe, print_logs=True)
+    #solution = simulated_annealing(sets_universe, wds_universe, print_logs=True)
     # solution = simulated_annealing(test_sets_2, wds_2, print_logs=False)
     #print("\n+++++++")
     #print("Solution:")
