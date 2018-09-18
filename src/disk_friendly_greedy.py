@@ -5,6 +5,8 @@ from math import log
 from src.preprocesses import *
 from text_coverage_data import sets_universe
 
+from collections import *
+
 
 def disk_friendly_greedy(sets, p, print_logs=False):
     """
