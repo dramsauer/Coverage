@@ -168,4 +168,4 @@ if __name__ == "__main__":
             print(headline)
             values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(values)
-            f.write(values)
+            #f.write(values)

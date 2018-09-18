@@ -20,7 +20,7 @@ def greedy_by_balas(sets, elements, print_logs=False):
     :return: solution set containing a sub-collection of indices of set_collection; <class 'set'>
 
     """
-    print("____________________\n")
+    print("\n____________________\n\n")
     print("| Greedy Heuristic |")
     print()
 
