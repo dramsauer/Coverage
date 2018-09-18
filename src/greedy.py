@@ -70,12 +70,12 @@ def greedy_by_balas(sets, elements, print_logs=False):
 
 
     if print_logs:
-        print("Amount of indices in Greedy-Solution: ", len(solution_indices), "\n")
+        print("Amount of indices in Greedy-Solution: ", len(solution_indices))
 
 
     # 4. Remove redundant entries in list by saving it as a set
     solution_indices = set(solution_indices)
 
-    print("\n____________________\n")
+    print("____________________\n")
 
     return solution_indices
