@@ -25,16 +25,36 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
     :return: solution set containing a sub-collection of indices of set_collection
     """
 
-    print("+----------------------+")
-    print("| Simulated Annealing  |")
-    print("+----------------------+\n")
+    solution_indices = set()
+
+    return solution_indices
+
+
+def local_search_heuristic(sets, elements, neighbourhood_scale, search_depth, predefined_solution=None, print_logs=False):
+    """
+    This algorithm is the main contribution of:
+        Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
+        Naval Research Logistics (NRL), 42(7), 1129-1140.
+
+    :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe (1)
+    :param elements: set of words/elements to be covered.
+    :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
+    :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
+    :param predefined_solution: for multiple iterations of testing you can give this method a feasable solution to start with
+    :param print_logs: prints outputs and parameters of used functions.
+    :return: solution set containing a sub-collection of indices of set_collection
+    """
+
+    print("\n")
+    print("| Local-Search-Heuristic |")
+    print()
 
 
 
     """
     Initialization & Pre-processes
     """
-    if predefined_solution is not None:
+    if predefined_solution is None:
         print("Preprocesses.")
         print("Finding a feasable solution via greedy heuristic...")
         feasable_greedy_solution, amount_elements_covered_dict = greedy_by_balas_with_coverage_matrix(sets=sets, elements=elements, print_logs=print_logs)
@@ -54,7 +74,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
     set_lengths = compute_set_lengths(get_set_list_of_solution_indices(collection=sets, solution_indices=current_solution_list_indices))
     d = 0
     D = neighbourhood_scale * len(current_solution_list_indices)
-    maximum_set_length_allowed = search_depth * max(set_lengths)
+    maximum_set_length_allowed = max(set_lengths) # = search_depth * max(set_lengths)
 
 
 
@@ -94,6 +114,8 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
             if amount_elements_covered_dict[element] == 0:
                 uncovered_count += 1
         print("Uncovered Words: ", uncovered_count)
+        if (len(elements)-uncovered_count)/len(elements) > 0.9:
+            break
         if uncovered_count == 0:
             break
 
