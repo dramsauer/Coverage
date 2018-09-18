@@ -20,7 +20,7 @@ def greedy_by_balas(sets, elements, print_logs=False):
     :return: solution set containing a sub-collection of indices of set_collection; <class 'set'>
 
     """
-    print("\n____________________\n\n")
+    print("\n\n____________________\n")
     print("| Greedy Heuristic |")
     print()
 
@@ -74,6 +74,6 @@ def greedy_by_balas(sets, elements, print_logs=False):
 
     if print_logs:
         print("Amount of indices in Greedy-Solution: ", len(solution_indices))
-    print("____________________\n")
+    print("____________________\n\n")
 
     return solution_indices
