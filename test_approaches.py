@@ -4,6 +4,7 @@ import time
 from src.disk_friendly_greedy import *
 from src.simulated_annealing import *
 from src.greedy import *
+from src.preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 import numpy as np
 
@@ -90,9 +91,9 @@ if __name__ == "__main__":
     """
 
     # Testing the Disk-Friendly-Greedy
-    if False:
+    if True:
 
-        headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
+        headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Sum of all Set-sizes in solution,Time elapsed in sec\n"
 
         file = "out/disk_friendly_greedy_results.csv"
         f = open(file, "a")
@@ -110,10 +111,11 @@ if __name__ == "__main__":
             solution_indices_len = len(solution_indices)
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
                                                                                      solution_indices)
-            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(solution_sets)
 
             values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
-                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+                elements_len) + "," + str(percentage) + "," + str(solution_sets_sizes) + "," + str(execution_time) + "\n"
             print(headline)
             print(values)
             f.write(values)
@@ -121,8 +123,8 @@ if __name__ == "__main__":
         f.close()
 
     # Testing the greedy_by_balas heuristic
-    if False:
-        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
+    if True:
+        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Sum of all Set-sizes in solution,,Time elapsed in sec\n"
 
         file = "out/greedy_results.csv"
         f = open(file, "a")
@@ -140,16 +142,17 @@ if __name__ == "__main__":
             solution_indices_len = len(solution_indices)
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
                                                                                      solution_indices)
-            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(solution_sets)
 
             print(headline)
             values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
-                percentage) + "," + str(execution_time) + "\n"
+                percentage) + "," + str(solution_sets_sizes) + "," + str(execution_time) + "\n"
             print(values)
             f.write(values)
 
     # Testing the simulated annealing
-    if True:
+    if False:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
@@ -161,8 +164,8 @@ if __name__ == "__main__":
                                                                                                  elements=wds_universe,
                                                                                                  print_logs=True)
 
-        for p1 in np.arange(1.05, 1.2, 0.05):
-
+        # for p1 in np.arange(0.05, 0.2, 0.05):
+        for i in range(1):
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    elements=wds_universe,
