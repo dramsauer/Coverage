@@ -40,6 +40,13 @@ def build_inverted_index(set_collection, print_output=False):
     return index
 
 
+def get_set_list_of_solution_indices(collection, solution_indices):
+    sets = list()
+    for i in solution_indices:
+        sets.append(collection[i])
+    return sets
+
+
 def compute_set_lengths(set_collection):
     """
     Compute lengths for each set in set_collection and save it in an list.

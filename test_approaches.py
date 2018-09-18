@@ -1,6 +1,6 @@
 import time
 
-import deterministic
+import disk_friendly_greedy
 import statistic
 from text_coverage_data import sets_universe, wds_universe
 
@@ -23,12 +23,6 @@ def percentage_of_solution_covering(elements, collection, solution_indices):
 
     return len(solution_elements), len(elements), percentage_overlapping
 
-
-def get_set_list_of_solution_indices(collection, solution_indices):
-    sets = list()
-    for i in solution_indices:
-        sets.append(collection[i])
-    return sets
 
 
 def testing_on_example_data():
@@ -64,7 +58,7 @@ def testing_on_example_data():
     Test Set from Paper
     """
 
-    solution_indices = deterministic.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
+    solution_indices = disk_friendly_greedy.disk_friendly_greedy(test_sets_2, p=2.00, print_logs=True)
     print("\n+++++++")
     print("Solution-indices:", solution_indices)
     print("# Solution-indices:", len(solution_indices))
