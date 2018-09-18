@@ -112,7 +112,7 @@ if __name__ == "__main__":
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
                                                                                      solution_indices)
             solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(sets_universe, solution_sets)
+            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(sets_universe, solution_indices)
 
             values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
                 elements_len) + "," + str(percentage) + "," + str(solution_sets_sizes) + "," + str(execution_time) + "\n"
@@ -143,7 +143,7 @@ if __name__ == "__main__":
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
                                                                                      solution_indices)
             solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
-            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(sets_universe, solution_sets)
+            solution_sets_sizes = get_sum_of_all_set_sizes_of_solution_indices(sets_universe, solution_indices)
 
             print(headline)
             values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
