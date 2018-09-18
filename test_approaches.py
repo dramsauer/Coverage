@@ -155,8 +155,8 @@ if __name__ == "__main__":
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    elements=wds_universe,
-                                                   neighbourhood_scale=0.5,
-                                                   search_depth=0.5,
+                                                   neighbourhood_scale=0.1,
+                                                   search_depth=1.1,
                                                    print_logs=True)
             end = time.time()
 
