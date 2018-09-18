@@ -67,15 +67,13 @@ def greedy_by_balas(sets, elements, print_logs=False):
         words_to_cover.remove(random_word)
         amount_words -= 1
 
+    # 4. Remove redundant entries in list by saving it as a set
+    solution_indices = set(solution_indices)
+
 
 
     if print_logs:
         print("Amount of indices in Greedy-Solution: ", len(solution_indices))
-
-
-    # 4. Remove redundant entries in list by saving it as a set
-    solution_indices = set(solution_indices)
-
     print("____________________\n")
 
     return solution_indices
