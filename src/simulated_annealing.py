@@ -99,14 +99,3 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    #solution = simulated_annealing(sets_universe, wds_universe, print_logs=True)
-    # solution = simulated_annealing(test_sets_2, wds_2, print_logs=False)
-    #print("\n+++++++")
-    #print("Solution:")
-    #print(solution)
-
-    # #solution = simulated_annealing(sets_universe, wds_universe, print_logs=False)
-    # solution = simulated_annealing(test_sets_2, wds_2, print_logs=False)
-    #print("\n+++++++")
-    #print("Solution:")
-    #print(solution)
