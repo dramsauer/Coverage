@@ -20,7 +20,7 @@ def greedy_by_balas(sets, elements, print_logs=False):
     :return: solution set containing a sub-collection of indices of set_collection; <class 'set'>
 
     """
-    print()
+    print("____________________\n")
     print("| Greedy Heuristic |")
     print()
 
@@ -60,12 +60,6 @@ def greedy_by_balas(sets, elements, print_logs=False):
 
                 sorted_set_index = sorted_collection.index(set_i)
                 original_set_index = comparison_list[sorted_set_index]
-                #print("Set: ", set_i)
-                #print("Sorted Set Index: ", sorted_set_index)
-                #print("------------------------")
-                #print("Original Index:   ", original_set_index)
-                #print("Set: ", set_collection[original_set_index])
-                #print()
 
                 solution_indices.append(original_set_index)
                 break
@@ -78,7 +72,10 @@ def greedy_by_balas(sets, elements, print_logs=False):
     if print_logs:
         print("Amount of indices in Greedy-Solution: ", len(solution_indices), "\n")
 
+
     # 4. Remove redundant entries in list by saving it as a set
     solution_indices = set(solution_indices)
+
+    print("\n____________________\n")
 
     return solution_indices
