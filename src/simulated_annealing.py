@@ -7,7 +7,7 @@ from src.preprocesses import *
 from text_coverage_data import sets_universe
 
 
-def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print_logs=False):
+def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, predefined_solution=None, print_logs=False):
     """
     Find a feasible solution for the set cover problem with greedy heuristic and optimize the solution via
     simulated annealing.
@@ -20,6 +20,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
     :param elements: set of words/elements to be covered.
     :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
     :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
+    :param predefined_solution: for multiple iterations of testing you can give this method a feasable solution to start with
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution set containing a sub-collection of indices of set_collection
     """
@@ -33,11 +34,13 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
     """
     Initialization & Pre-processes
     """
+    if predefined_solution is not None:
+        print("Preprocesses.")
+        print("Finding a feasable solution via greedy heuristic...")
+        feasable_greedy_solution, amount_elements_covered_dict = greedy_by_balas_with_coverage_matrix(sets=sets, elements=elements, print_logs=print_logs)
 
-    print("Preprocesses.")
-    print("Finding a feasable solution via greedy heuristic...")
-    feasable_greedy_solution, amount_elements_covered_dict = greedy_by_balas_with_coverage_matrix(sets=sets, elements=elements, print_logs=print_logs)
-
+    else:
+        feasable_greedy_solution, amount_elements_covered_dict = predefined_solution
     set_collection = deepcopy(sets)
 
 
@@ -115,19 +118,24 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
                     if element in set_collection[set_i]:
                         recovering_dict[set_i] += 1
 
-                # Divide the set length through amount of recovered elements
                 if recovering_dict[set_i] == 0:
                     del recovering_dict[set_i]
-                else:
-                    recovering_dict[set_i] = set_length / recovering_dict[set_i]
+
+
+                #else:  # Taking the amount recovering sets worked best
+                    # recovering_dict[set_i] = set_length / recovering_dict[set_i]  # Quite slow!
+                    # recovering_dict[set_i] = recovering_dict[set_i] / set_length    # Totally bad!!
+
 
         # Select a set where the "cost"-value of the recovering_dict is minimum
         key_of_cost_min = min(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
-        current_solution_list_indices.append(key_of_cost_min)
-        removed_from_solution.remove(key_of_cost_min)
-        print("\nSet moving from not-in-solution to in-solution: ", key_of_cost_min,
+        key_of_cost_max = max(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
+
+        current_solution_list_indices.append(key_of_cost_max)
+        removed_from_solution.remove(key_of_cost_max)
+        print("\nSet moving from not-in-solution to in-solution: ", key_of_cost_max,
               "Amount of sets in current solution: ", len(current_solution_list_indices))
-        for element in set_collection[key_of_cost_min]:
+        for element in set_collection[key_of_cost_max]:
             amount_elements_covered_dict[element] += 1
 
     # 6. Remove all duplicates
