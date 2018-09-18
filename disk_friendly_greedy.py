@@ -172,7 +172,7 @@ def is_set_length_higher_or_equal_pk_lower(pk_lower, set_i, set_lengths):
 def build_subcollections(p, set_collection, set_lengths, print_params=False, print_output=False):
     """
     Seperate sets in Sk subcollections; k is lowest exponent on p, K is the highest
-    :param p: rules the sizes of the created sub-collections. see also documentation in greedy()
+    :param p: rules the sizes of the created sub-collections. see also documentation in disk_friendly_greedy()
     :param set_collection: collection of sets
     :param set_lengths: list containing the lengths of the set in the whole set_collection; indices are the same
     :param print_params: if set true, parameters p, k, K and p^K are printed out
@@ -258,7 +258,6 @@ if __name__ == "__main__":
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'
     }
 
-    # solution = greedy(wds_universe, sets_universe, p=2, print_logs=TRUE)
     solution = disk_friendly_greedy(wds_2, test_sets_2, p=2, print_logs=False)
     print("\n+++++++")
     print("Solution:")
