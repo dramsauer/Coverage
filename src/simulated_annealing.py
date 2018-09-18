@@ -1,6 +1,6 @@
 from src.greedy import greedy_by_balas
 from src.preprocesses import *
-from text_coverage_data import sets_universe, wds_universe
+from text_coverage_data import sets_universe
 
 
 def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print_logs=False):
@@ -32,7 +32,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
 
     print("Preprocesses.")
     print("Finding a feasable solution via greedy heuristic...")
-    feasable_greedy_solution = greedy_by_balas(sets_universe, wds_universe, print_logs)
+    feasable_greedy_solution = greedy_by_balas(sets=sets, elements=elements, print_logs=print_logs)
 
 
 
@@ -49,12 +49,12 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
 
 
     """
-    Simulated Annealing
+    Main Algorithm
     """
-    print("Solution optimization by simulated annealing approach...")
+    print("\nMain Algorithm.")
+    print("Solution optimization by simulated annealing approach")
+    print("\nSearch for better solution sets...")
 
-    print(current_solution_list)
-    print(feasable_greedy_solution)
     #while d != D:
     #    current_set = random.sample()
 
