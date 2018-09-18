@@ -41,6 +41,13 @@ def build_inverted_index(set_collection, print_output=False):
 
 
 def get_set_list_of_solution_indices(collection, solution_indices):
+    """
+    Getting a list of sets from a list of indices (of a solution)
+    :param collection: the sets_universe
+    :param solution_indices: iterable containing indices of sets (in a solution) which is represents a sub-collection of collection
+    :return: a list containing the corresponding sets
+    """
+
     sets = list()
     for i in solution_indices:
         sets.append(collection[i])

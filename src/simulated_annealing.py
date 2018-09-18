@@ -39,7 +39,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
     print("Initialization.")
     solution_indices = set()
     not_in_solution_list = list()
-    current_solution_list = get_set_list_of_solution_indices(feasable_greedy_solution)
+    current_solution_list = get_set_list_of_solution_indices(collection=sets, solution_indices=feasable_greedy_solution)
 
     set_lengths = compute_set_lengths(current_solution_list)
     d = 0
