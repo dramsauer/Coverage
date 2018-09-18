@@ -1,6 +1,4 @@
-import random
-from copy import deepcopy
-
+from greedy import greedy_by_balas
 from preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 
@@ -34,7 +32,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
 
     print("Preprocesses.")
     print("Finding a feasable solution via greedy heuristic...")
-    feasable_greedy_solution = greedy(sets_universe, wds_universe, print_logs)
+    feasable_greedy_solution = greedy_by_balas(sets_universe, wds_universe, print_logs)
 
 
 
@@ -47,85 +45,6 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
     E = search_depth * max(set_lengths)
 
 
-
-    return solution_indices
-
-
-def greedy(sets, elements, print_logs=False):
-    """
-    Find a feasible solution for the set cover problem with greedy heuristic.
-
-    This algorithm was found in:
-        Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
-        Naval Research Logistics (NRL), 42(7), 1129-1140.
-    They based this algorithm on an approach by:
-        Balas, E., & Ho, A. (1980). Set covering algorithms using cutting planes, heuristics, and subgradient
-        optimization: a computational study. In Combinatorial optimization (pp. 37-60). Springer, Berlin, Heidelberg.
-    :param sets: collection of sets; with set_collection as a copy of it
-    :param elements: set of words/elements to be covered; with words_to_cover as a copy of it
-    :param print_logs: prints outputs and parameters of used functions.
-    :return: solution set containing a sub-collection of indices of set_collection
-    """
-    print()
-    print("| Greedy Heuristic |")
-    print()
-
-
-    """
-    Initialization & Pre-processes
-    """
-
-    print("\nInitialization.")
-
-    set_collection = deepcopy(sets)
-    sorted_collection, comparison_list = sort_collection_by_set_sizes_with_comparison_list(set_collection)
-
-    words_to_cover = list(deepcopy(elements))
-    amount_words = len(words_to_cover)
-
-    solution_indices = list()
-
-    """
-    Main-Algorithm
-    """
-
-    print("\nLoop.")
-    print("Iterating over all words that need to get covered...")
-
-    # Iterating over all words that need to get covered (= step 3 in paper also)
-    while amount_words > 0:
-        # 1. Select randomly one of the words
-        random_index = random.randint(0, amount_words-1)
-        random_word = words_to_cover[random_index]
-
-        # 2. Select first set in natural order
-        for set_i in sorted_collection:
-            # If the random word is part of the current chosen set,
-            # then add the index of the set to solution_indices
-            if random_word in set_i:
-
-                sorted_set_index = sorted_collection.index(set_i)
-                original_set_index = comparison_list[sorted_set_index]
-                #print("Set: ", set_i)
-                #print("Sorted Set Index: ", sorted_set_index)
-                #print("------------------------")
-                #print("Original Index:   ", original_set_index)
-                #print("Set: ", set_collection[original_set_index])
-                #print()
-
-                solution_indices.append(original_set_index)
-                break
-
-        words_to_cover.remove(random_word)
-        amount_words -= 1
-
-
-
-    if print_logs:
-        print("Amount of indices in Greedy-Solution: ", len(solution_indices), "\n")
-
-    # 4. Remove redundant entries in list by saving it as a set
-    solution_indices = set(solution_indices)
 
     return solution_indices
 

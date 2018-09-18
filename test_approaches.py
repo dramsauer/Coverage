@@ -1,7 +1,7 @@
 import time
 
 import disk_friendly_greedy
-import statistic
+import greedy
 from text_coverage_data import sets_universe, wds_universe
 
 
@@ -74,7 +74,8 @@ if __name__ == "__main__":
     # testing_on_example_data()
 
     """
-    Execution of the disk-friendly greedy algorithm &
+    Execution of the disk-friendly-greedy algorithm &
+    simulated-annealing algorithm
     for the given set cover problem.
     The set collection is contained in sets_universe,
     the elements to cover are stored in wds_universe.
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 
         f.close()
 
-    # Testing the greedy heuristic
+    # Testing the greedy_by_balas heuristic
     if True:
         headline = "Iteration,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
@@ -117,7 +118,7 @@ if __name__ == "__main__":
 
         for i in range(10):
             start = time.time()
-            solution_indices = statistic.greedy(sets_universe, wds_universe, True)
+            solution_indices = greedy.greedy_by_balas(sets_universe, wds_universe, True)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)
