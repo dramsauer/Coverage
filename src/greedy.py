@@ -17,7 +17,8 @@ def greedy_by_balas(sets, elements, print_logs=False):
     :param sets: collection of sets; with set_collection as a copy of it
     :param elements: set of words/elements to be covered; with words_to_cover as a copy of it
     :param print_logs: prints outputs and parameters of used functions.
-    :return: solution set containing a sub-collection of indices of set_collection
+    :return: solution set containing a sub-collection of indices of set_collection; <class 'set'>
+
     """
     print()
     print("| Greedy Heuristic |")

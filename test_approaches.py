@@ -1,6 +1,7 @@
+import os
 import time
 
-from src import disk_friendly_greedy, greedy
+from src import disk_friendly_greedy, greedy, preprocesses
 from text_coverage_data import sets_universe, wds_universe
 
 
@@ -61,7 +62,7 @@ def testing_on_example_data():
     print("\n+++++++")
     print("Solution-indices:", solution_indices)
     print("# Solution-indices:", len(solution_indices))
-    solution_sets = get_set_list_of_solution_indices(test_sets_2, solution_indices)
+    solution_sets = preprocesses.get_set_list_of_solution_indices(test_sets_2, solution_indices)
     print("Solution-sets: ", solution_sets)
     print()
     result = percentage_of_solution_covering(wds_2, test_sets_2, solution_indices, True)
@@ -88,7 +89,8 @@ if __name__ == "__main__":
 
         file = "out/deterministic_dfg_results.csv"
         f = open(file, "a")
-        f.write(headline)
+        if os.stat(file).st_size == 0:
+            f.write(headline)
 
         for p in np.arange(1.005, 2.000, 0.005):
             start = time.time()
@@ -109,13 +111,14 @@ if __name__ == "__main__":
 
     # Testing the greedy_by_balas heuristic
     if True:
-        headline = "Iteration,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
+        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/greedy_results.csv"
         f = open(file, "a")
-        f.write(headline)
+        if os.stat(file).st_size == 0:
+            f.write(headline)
 
-        for i in range(10):
+        for i in range(1):
             start = time.time()
             solution_indices = greedy.greedy_by_balas(sets_universe, wds_universe, True)
             end = time.time()
@@ -126,6 +129,7 @@ if __name__ == "__main__":
             # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
             print(headline)
-            values = str(i) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(values)
             f.write(values)
+            print(solution_indices.__class__)
