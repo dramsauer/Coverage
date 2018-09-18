@@ -1,5 +1,5 @@
-from greedy import greedy_by_balas
-from preprocesses import *
+from src.greedy import greedy_by_balas
+from src.preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 
 

@@ -1,7 +1,7 @@
 import random
 from copy import deepcopy
 
-from preprocesses import sort_collection_by_set_sizes_with_comparison_list
+from src.preprocesses import sort_collection_by_set_sizes_with_comparison_list
 
 
 def greedy_by_balas(sets, elements, print_logs=False):

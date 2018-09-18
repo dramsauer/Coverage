@@ -2,7 +2,7 @@ import math
 from copy import deepcopy
 from math import log
 
-from preprocesses import *
+from src.preprocesses import *
 from text_coverage_data import sets_universe
 
 

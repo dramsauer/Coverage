@@ -1,7 +1,6 @@
 import time
 
-import disk_friendly_greedy
-import greedy
+from src import disk_friendly_greedy, greedy
 from text_coverage_data import sets_universe, wds_universe
 
 
