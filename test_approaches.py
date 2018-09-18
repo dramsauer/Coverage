@@ -3,7 +3,9 @@ import time
 
 from src.disk_friendly_greedy import *
 from src.simulated_annealing import *
+from src.greedy import *
 from text_coverage_data import sets_universe, wds_universe
+import numpy as np
 
 
 # from src import disk_friendly_greedy, greedy, preprocesses
@@ -75,8 +77,8 @@ def testing_on_example_data():
 if __name__ == "__main__":
     print("")
     # testing_on_example_data()
-    #print("wds: ", wds_universe.__class__)
-    #print("sets: ", sets_universe.__class__)
+    # print("wds: ", wds_universe.__class__)
+    # print("sets: ", sets_universe.__class__)
 
     """
     Execution of the disk-friendly-greedy algorithm &
@@ -106,10 +108,12 @@ if __name__ == "__main__":
 
             execution_time = round(end - start, ndigits=3)
             solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                     solution_indices)
             # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
-            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            values = str(round(p, ndigits=4)) + "," + str(solution_indices_len) + "," + str(solution_len) + "," + str(
+                elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
             print(headline)
             print(values)
             f.write(values)
@@ -134,11 +138,13 @@ if __name__ == "__main__":
 
             execution_time = round(end - start, ndigits=3)
             solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                     solution_indices)
             # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
 
             print(headline)
-            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
+                percentage) + "," + str(execution_time) + "\n"
             print(values)
             f.write(values)
 
@@ -151,21 +157,28 @@ if __name__ == "__main__":
         if os.stat(file).st_size == 0:
             f.write(headline)
 
-        for i in range(1):
+        (greedy_solution_indices, greedy_coverage_matrix) = greedy_by_balas_with_coverage_matrix(sets=sets_universe,
+                                                                                                 elements=wds_universe,
+                                                                                                 print_logs=True)
+
+        for p1 in np.arange(1.05, 1.2, 0.05):
+
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    elements=wds_universe,
-                                                   neighbourhood_scale=0.1,
-                                                   search_depth=1.1,
+                                                   neighbourhood_scale=0.05,
+                                                   search_depth=2.0,
+                                                   predefined_solution=(greedy_solution_indices, greedy_coverage_matrix),
                                                    print_logs=True)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)
             solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe, solution_indices)
-            # solution_sets = get_set_list_of_solution_indices(sets_universe, solution_indices)
+            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                     solution_indices)
 
             print(headline)
-            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(percentage) + "," + str(execution_time) + "\n"
+            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
+                percentage) + "," + str(execution_time) + "\n"
             print(values)
-            #f.write(values)
+            f.write(values)
