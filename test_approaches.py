@@ -99,7 +99,9 @@ if __name__ == "__main__":
 
         for p in np.arange(1.005, 2.000, 0.005):
             start = time.time()
-            solution_indices = disk_friendly_greedy(sets_universe, round(p, ndigits=4), print_logs=False)
+            solution_indices = disk_friendly_greedy(sets=sets_universe,
+                                                    p=round(p, ndigits=4),
+                                                    print_logs=False)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)
@@ -115,7 +117,7 @@ if __name__ == "__main__":
         f.close()
 
     # Testing the greedy_by_balas heuristic
-    if True:
+    if False:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/greedy_results.csv"
@@ -125,7 +127,9 @@ if __name__ == "__main__":
 
         for i in range(3):
             start = time.time()
-            solution_indices = greedy_by_balas(list(sets_universe), list(wds_universe), True)
+            solution_indices = greedy_by_balas(sets=sets_universe,
+                                               elements=wds_universe,
+                                               print_logs=True)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)
@@ -139,7 +143,7 @@ if __name__ == "__main__":
             f.write(values)
 
     # Testing the simulated annealing
-    if False:
+    if True:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
@@ -149,7 +153,11 @@ if __name__ == "__main__":
 
         for i in range(1):
             start = time.time()
-            solution_indices = simulated_annealing(sets_universe, wds_universe, True)
+            solution_indices = simulated_annealing(sets=sets_universe,
+                                                   elements=wds_universe,
+                                                   neighbourhood_scale=0.5,
+                                                   search_depth=0.5,
+                                                   print_logs=True)
             end = time.time()
 
             execution_time = round(end - start, ndigits=3)

@@ -1,5 +1,3 @@
-import random
-
 from src.greedy import greedy_by_balas
 from src.preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
@@ -40,7 +38,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
 
     print("Initialization.")
     solution_indices = set()
-    not_in_solution_list = set()
+    not_in_solution_list = list()
     current_solution_list = get_set_list_of_solution_indices(feasable_greedy_solution)
 
     set_lengths = compute_set_lengths(current_solution_list)
@@ -55,8 +53,10 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, print
     """
     print("Solution optimization by simulated annealing approach...")
 
-    while d != D:
-        current_set = random.sample()
+    print(current_solution_list)
+    print(feasable_greedy_solution)
+    #while d != D:
+    #    current_set = random.sample()
 
     return solution_indices
 
