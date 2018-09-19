@@ -131,7 +131,7 @@ if __name__ == "__main__":
         if os.stat(file).st_size == 0:
             f.write(headline)
 
-        for i in range(1):
+        for i in range(50):
             start = time.time()
             solution_indices = greedy_by_balas(sets=sets_universe,
                                                elements=wds_universe,
