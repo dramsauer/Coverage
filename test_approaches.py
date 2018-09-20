@@ -91,7 +91,7 @@ if __name__ == "__main__":
     """
 
     # Testing the Disk-Friendly-Greedy
-    if True:
+    if False:
 
         headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Sum of all Set-sizes in solution,Time elapsed in sec\n"
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         f.close()
 
     # Testing the greedy_by_balas heuristic
-    if True:
+    if False:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Sum of all Set-sizes in solution,,Time elapsed in sec\n"
 
         file = "out/greedy_results.csv"
