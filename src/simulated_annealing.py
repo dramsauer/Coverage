@@ -46,6 +46,9 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
     solution_elements_covered_dict = amount_elements_covered_dict
     best_solution = set()
 
+    if print_logs:
+        print("Starting simulated annealing with solution size:", solution_cost)
+
     start_time = time.time()
     while (time.time()-start_time) < running_time:
         i = 1
@@ -56,6 +59,7 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
             delta = new_cost - solution_cost
             if delta <= 0:
                 solution = new_solution
+                solution_cost = new_cost
                 solution_elements_covered_dict = new_solution_elements_dict
                 best_solution = new_solution
                 if print_logs:
@@ -68,6 +72,7 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
                 prob = math.pow(math.e, (-delta)/temp)
                 if prob > random.random():
                     solution = new_solution
+                    solution_cost = new_cost
                     solution_elements_covered_dict = new_solution_elements_dict
             temp = temp * cooling_factor
 
@@ -124,7 +129,7 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
 
     current_solution_list_indices = list(feasible_solution)
 
-    set_lengths = compute_set_lengths(get_set_list_of_solution_indices(collection=sets, solution_indices=current_solution_list_indices))
+    set_lengths = compute_set_lengths(get_set_list_of_solution_indices(collection=set_collection, solution_indices=current_solution_list_indices))
     d = 0
     D = neighbourhood_scale * len(current_solution_list_indices)
     maximum_set_length_allowed = max(set_lengths) * search_depth
@@ -156,8 +161,11 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         print("\nCheck which elements now got uncovered...")
         print("Checking which sets are short enough to be brought into solution again")
         print("and how many elements get 'recovered' by those sets...\n")
+        print("Removed sets: ", removed_from_solution)
         print("---Amount Elements covered now: ", len(amount_elements_covered_dict), "\n")
 
+
+    added_to_solution = list()
     uncovered_elements_existing = True
     # If all elements are still covered, go to step 6, otherwise continue with step 4.
     while uncovered_elements_existing: # should be True if that dict has entries!
@@ -167,14 +175,11 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
             if amount_elements_covered_dict[element] == 0:
                 uncovered_count += 1
 
-        if print_logs:
-            print("Uncovered Words: ", uncovered_count)
+        #if print_logs:
+        #    print("Uncovered Words: ", uncovered_count)
 
-        #if (len(elements)-uncovered_count)/len(elements) > 0.9:
-        #    break
         if uncovered_count == 0:
             break
-
 
 
         # 4. Make a dict of sets which have a length that lower-equals maximum_set_length_allowed
@@ -210,11 +215,10 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         # key_of_cost_max = max(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
 
         current_solution_list_indices.append(key_of_cost_min)
+        added_to_solution.append(key_of_cost_min)
         removed_from_solution.remove(key_of_cost_min)
-
-        if print_logs:
-            print("\nSet moving from not-in-solution to in-solution: ", key_of_cost_min,
-                  "Amount of sets in current solution: ", len(current_solution_list_indices))
+        #if print_logs:
+            # print("Amount of sets in current solution: ", len(current_solution_list_indices))
 
         for element in set_collection[key_of_cost_min]:
             amount_elements_covered_dict[element] += 1
@@ -222,6 +226,12 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
     # 6. Remove all duplicates
     solution_indices = set(current_solution_list_indices)
 
+    if print_logs:
+        print("Added sets: ", added_to_solution)
+
+
+    if solution_indices == solution:
+        print("############# EQUAL #############")
 
     return solution_indices, amount_elements_covered_dict
 
