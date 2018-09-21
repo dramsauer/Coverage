@@ -7,7 +7,7 @@ from src.greedy import *
 from src.preprocesses import *
 from text_coverage_data import sets_universe, wds_universe
 import numpy as np
-
+import pickle
 
 # from src import disk_friendly_greedy, greedy, preprocesses
 
@@ -151,8 +151,15 @@ if __name__ == "__main__":
             print(values)
             f.write(values)
 
-    # Testing the simulated annealing
+    # Saving a greedy solution as pickle file (good for testing simulated annealing)
     if False:
+        (greedy_solution_indices, greedy_coverage_matrix) = greedy_by_balas_with_coverage_matrix(sets=sets_universe, elements=wds_universe, print_logs=True)
+
+        with open('save_solution.p', 'wb') as fp:
+            pickle.dump((greedy_solution_indices, greedy_coverage_matrix), fp)
+
+    # Testing the simulated annealing
+    if True:
         headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
@@ -160,9 +167,14 @@ if __name__ == "__main__":
         if os.stat(file).st_size == 0:
             f.write(headline)
 
-        (greedy_solution_indices, greedy_coverage_matrix) = greedy_by_balas_with_coverage_matrix(sets=sets_universe,
-                                                                                                 elements=wds_universe,
-                                                                                                 print_logs=True)
+        if os.stat('save_solution.p').st_size == 0:
+            (greedy_solution_indices, greedy_coverage_matrix) = greedy_by_balas_with_coverage_matrix(sets=sets_universe, elements=wds_universe, print_logs=True)
+            with open('save_solution.p', 'wb') as fp:
+                pickle.dump((greedy_solution_indices, greedy_coverage_matrix), fp)
+
+        with open('save_solution.p', 'rb') as fp:
+            (greedy_solution_indices, greedy_coverage_matrix) = pickle.load(fp)
+
 
         # for p1 in np.arange(0.05, 0.2, 0.05):
         for i in range(1):
