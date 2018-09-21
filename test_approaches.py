@@ -178,7 +178,7 @@ if __name__ == "__main__":
 
         # for p1 in np.arange(0.05, 0.2, 0.05):
         for i in range(1):
-            time_limit = 120
+            time_limit = 60
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    predefined_solution=greedy_solution_indices,
