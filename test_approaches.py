@@ -178,20 +178,16 @@ if __name__ == "__main__":
 
         # for p1 in np.arange(0.05, 0.2, 0.05):
         for i in range(1):
+            time_limit = 1000
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
-                                                   elements=wds_universe,
-                                                   temp=0,
-                                                   temp_length=0,
-                                                   cooling_factor=0,
-                                                   running_time=1000,
-                                                   neighbourhood_scale=0.001,
-                                                   search_depth=2.0,
-                                                   predefined_solution=(greedy_solution_indices, greedy_coverage_matrix),
+                                                   predefined_solution=greedy_solution_indices,
+                                                   amount_elements_covered_dict=greedy_coverage_matrix,
+                                                   running_time=time_limit,
                                                    print_logs=True)
             end = time.time()
-
             execution_time = round(end - start, ndigits=3)
+
             solution_indices_len = len(solution_indices)
             solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
                                                                                      solution_indices)

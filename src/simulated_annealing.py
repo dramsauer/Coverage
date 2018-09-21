@@ -44,18 +44,23 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
     solution = predefined_solution
     solution_cost = len(solution)
     solution_elements_covered_dict = amount_elements_covered_dict
+    best_solution = set()
 
-
-    while time.time() < running_time:
+    start_time = time.time()
+    while (time.time()-start_time) < running_time:
         i = 1
         while i <= temp_length:
-            new_solution, new_solution_elements_dict = local_search_heuristic(set_collection, neighbourhood_scale, search_depth, solution, solution_elements_covered_dict, print_logs)
+            new_solution, new_solution_elements_dict = local_search_heuristic(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, search_depth, print_logs)
             new_cost = len(new_solution)
+
             delta = new_cost - solution_cost
             if delta <= 0:
                 solution = new_solution
                 solution_elements_covered_dict = new_solution_elements_dict
                 best_solution = new_solution
+                if print_logs:
+                    print("New best solution found!")
+                    print("It has ", len(best_solution), " sets.")
             else:
                 # When delta is less than zero, then exp( -(-delta) / temp )
                 # 1) if delta is low, the probability for a change of the solution gets high
@@ -65,6 +70,10 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
                     solution = new_solution
                     solution_elements_covered_dict = new_solution_elements_dict
             temp = temp * cooling_factor
+
+            if print_logs:
+                print("Cooling temperature down: ", temp)
+
             break
         i += 1
     return best_solution
