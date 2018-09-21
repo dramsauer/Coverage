@@ -46,6 +46,7 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
     return solution_indices
 
 
+
 def local_search_heuristic(sets, elements, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs=False):
     """
     This algorithm is the main contribution of:
