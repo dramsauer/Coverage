@@ -1,4 +1,6 @@
+import math
 import random
+import time
 from collections import defaultdict
 from copy import deepcopy
 
@@ -7,7 +9,7 @@ from src.preprocesses import *
 from text_coverage_data import sets_universe
 
 
-def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, predefined_solution=None, print_logs=False):
+def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_scale=0.001, search_depth=2, temp=1.3, temp_length=100, cooling_factor=0.9, print_logs=False):
     """
     Find a feasible solution for the set cover problem with greedy heuristic and optimize the solution via
     simulated annealing.
@@ -17,7 +19,10 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
         Naval Research Logistics (NRL), 42(7), 1129-1140.
 
     :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe (1)
-    :param elements: set of words/elements to be covered.
+    :param temp: initial temperature - controls the probability of accepting an inferior solution
+    :param temp_length: number of iterations at a particular value of the temperature
+    :param cooling_factor: percentage by which the temperature is reduced after temp_length iterations
+    :param running_time: maximum computation time
     :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
     :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
     :param predefined_solution: for multiple iterations of testing you can give this method a feasable solution to start with
@@ -26,28 +31,41 @@ def simulated_annealing(sets, elements, neighbourhood_scale, search_depth, prede
     """
 
     """
-    Initialization & Pre-processes
+    Initialization
     """
     set_collection = deepcopy(sets)
 
-    if predefined_solution is None:
-        if print_logs:
-            print("Preprocesses.")
-            print("Finding a feasable solution via greedy heuristic...")
-        feasable_greedy_solution, amount_elements_covered_dict = greedy_by_balas_with_coverage_matrix(sets=set_collection, elements=elements, print_logs=print_logs)
-    else:
-        feasable_greedy_solution, amount_elements_covered_dict = predefined_solution
+    feasable_greedy_solution, amount_elements_covered_dict = predefined_solution
 
-    #for iteration in iterations:
-    solution_indices = local_search_heuristic(set_collection, elements, neighbourhood_scale, search_depth, feasable_greedy_solution, amount_elements_covered_dict, print_logs)
+    # TODO amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered <== SHALL BE REMOVED!!! has to be calculated in lsh
 
-    #solution_indices = set()
+    solution = feasable_greedy_solution
+    solution_cost = len(solution)
 
-    return solution_indices
+    while time.time() < running_time:
+        i = 1
+        while i <= temp_length:
+            new_solution = local_search_heuristic(set_collection, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs)
+            new_cost = len(new_solution)
+            delta = new_cost - solution_cost
+            if delta <= 0:
+                solution = new_solution
+                best_solution = new_solution
+            else:
+                # When delta is less than zero, then exp( -(-delta) / temp )
+                # 1) if delta is low, the probability for a change of the solution gets high
+                # 2) if temperature is low, the probability for a change of the solution gets high
+                prob = math.pow(math.e, (-delta)/temp)
+                if prob > random.random():
+                    solution = new_solution
+            temp = temp * cooling_factor
+            break
+        i += 1
+    return best_solution
 
 
 
-def local_search_heuristic(sets, elements, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs=False):
+def local_search_heuristic(sets, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs=False):
     """
     This algorithm is the main contribution of:
         Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
@@ -55,7 +73,6 @@ def local_search_heuristic(sets, elements, neighbourhood_scale, search_depth, so
 
     :param amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered
     :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe
-    :param elements: set of words/elements to be covered.
     :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
     :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
     :param solution: a feasible solution to start with
@@ -135,8 +152,8 @@ def local_search_heuristic(sets, elements, neighbourhood_scale, search_depth, so
         if print_logs:
             print("Uncovered Words: ", uncovered_count)
 
-        if (len(elements)-uncovered_count)/len(elements) > 0.9:
-            break
+        #if (len(elements)-uncovered_count)/len(elements) > 0.9:
+        #    break
         if uncovered_count == 0:
             break
 
