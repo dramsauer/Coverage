@@ -181,7 +181,11 @@ if __name__ == "__main__":
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    elements=wds_universe,
-                                                   neighbourhood_scale=0.05,
+                                                   temp=0,
+                                                   temp_length=0,
+                                                   cooling_factor=0,
+                                                   running_time=1000,
+                                                   neighbourhood_scale=0.001,
                                                    search_depth=2.0,
                                                    predefined_solution=(greedy_solution_indices, greedy_coverage_matrix),
                                                    print_logs=True)

@@ -4,12 +4,11 @@ import time
 from collections import defaultdict
 from copy import deepcopy
 
-from src.greedy import greedy_by_balas_with_coverage_matrix
 from src.preprocesses import *
 from text_coverage_data import sets_universe
 
 
-def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_scale=0.001, search_depth=2, temp=1.3, temp_length=100, cooling_factor=0.9, print_logs=False):
+def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict, running_time, neighbourhood_scale=0.001, search_depth=2, temp=1.3, temp_length=100, cooling_factor=0.9, print_logs=False):
     """
     Find a feasible solution for the set cover problem with greedy heuristic and optimize the solution via
     simulated annealing.
@@ -18,15 +17,21 @@ def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_s
         Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
         Naval Research Logistics (NRL), 42(7), 1129-1140.
 
-    :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe (1)
+    :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe
+
+    :param predefined_solution: for multiple iterations of testing you can give this method a feasable solution to start with
+    :param amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered
+
     :param temp: initial temperature - controls the probability of accepting an inferior solution
     :param temp_length: number of iterations at a particular value of the temperature
     :param cooling_factor: percentage by which the temperature is reduced after temp_length iterations
     :param running_time: maximum computation time
+
     :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
     :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
-    :param predefined_solution: for multiple iterations of testing you can give this method a feasable solution to start with
+
     :param print_logs: prints outputs and parameters of used functions.
+
     :return: solution set containing a sub-collection of indices of set_collection
     """
 
@@ -35,21 +40,21 @@ def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_s
     """
     set_collection = deepcopy(sets)
 
-    feasable_greedy_solution, amount_elements_covered_dict = predefined_solution
 
-    # TODO amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered <== SHALL BE REMOVED!!! has to be calculated in lsh
-
-    solution = feasable_greedy_solution
+    solution = predefined_solution
     solution_cost = len(solution)
+    solution_elements_covered_dict = amount_elements_covered_dict
+
 
     while time.time() < running_time:
         i = 1
         while i <= temp_length:
-            new_solution = local_search_heuristic(set_collection, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs)
+            new_solution, new_solution_elements_dict = local_search_heuristic(set_collection, neighbourhood_scale, search_depth, solution, solution_elements_covered_dict, print_logs)
             new_cost = len(new_solution)
             delta = new_cost - solution_cost
             if delta <= 0:
                 solution = new_solution
+                solution_elements_covered_dict = new_solution_elements_dict
                 best_solution = new_solution
             else:
                 # When delta is less than zero, then exp( -(-delta) / temp )
@@ -58,6 +63,7 @@ def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_s
                 prob = math.pow(math.e, (-delta)/temp)
                 if prob > random.random():
                     solution = new_solution
+                    solution_elements_covered_dict = new_solution_elements_dict
             temp = temp * cooling_factor
             break
         i += 1
@@ -65,17 +71,20 @@ def simulated_annealing(sets, predefined_solution, running_time, neighbourhood_s
 
 
 
-def local_search_heuristic(sets, neighbourhood_scale, search_depth, solution, amount_elements_covered_dict, print_logs=False):
+def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbourhood_scale=0.001, search_depth=2, print_logs=False):
     """
     This algorithm is the main contribution of:
         Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
         Naval Research Logistics (NRL), 42(7), 1129-1140.
 
-    :param amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered
     :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe
+
+    :param solution: a feasible solution to start with
+    :param amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered
+
     :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
     :param search_depth: percentage of set cost(=length) that is accepted for new solution at each iteration; control for search-depth
-    :param solution: a feasible solution to start with
+
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution set containing a sub-collection of indices of set_collection
     """
@@ -138,7 +147,7 @@ def local_search_heuristic(sets, neighbourhood_scale, search_depth, solution, am
         print("\nCheck which elements now got uncovered...")
         print("Checking which sets are short enough to be brought into solution again")
         print("and how many elements get 'recovered' by those sets...\n")
-        print("---Amount Elements uncovered now: ", len(amount_elements_covered_dict), "\n")
+        print("---Amount Elements covered now: ", len(amount_elements_covered_dict), "\n")
 
     uncovered_elements_existing = True
     # If all elements are still covered, go to step 6, otherwise continue with step 4.
@@ -189,7 +198,7 @@ def local_search_heuristic(sets, neighbourhood_scale, search_depth, solution, am
 
         # Select a set where the "cost"-value of the recovering_dict is minimum
         key_of_cost_min = min(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
-        key_of_cost_max = max(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
+        # key_of_cost_max = max(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
 
         current_solution_list_indices.append(key_of_cost_min)
         removed_from_solution.remove(key_of_cost_min)
@@ -205,7 +214,7 @@ def local_search_heuristic(sets, neighbourhood_scale, search_depth, solution, am
     solution_indices = set(current_solution_list_indices)
 
 
-    return solution_indices
+    return solution_indices, amount_elements_covered_dict
 
 
 if __name__ == "__main__":
