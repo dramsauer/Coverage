@@ -50,8 +50,8 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
         print("Starting simulated annealing with solution size:", solution_cost)
 
     start_time = time.time()
+    i = 1
     while (time.time()-start_time) < running_time:
-        i = 1
         while i <= temp_length:
             new_solution, new_solution_elements_dict = local_search_heuristic(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, search_depth, print_logs)
             new_cost = len(new_solution)
@@ -125,8 +125,6 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
     if print_logs:
         print("Initialization.")
 
-    removed_from_solution = list()
-
     current_solution_list_indices = list(feasible_solution)
 
     set_lengths = compute_set_lengths(get_set_list_of_solution_indices(collection=set_collection, solution_indices=current_solution_list_indices))
@@ -134,6 +132,7 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
     D = neighbourhood_scale * len(current_solution_list_indices)
     maximum_set_length_allowed = max(set_lengths) * search_depth
 
+    not_in_solution = list()
 
 
     """
@@ -149,7 +148,6 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         current_set_index = random.choice(current_solution_list_indices)
 
         # 2. Move the set from solution to not-covered;
-        removed_from_solution.append(current_set_index)
         current_solution_list_indices.remove(current_set_index)
 
         for element in set_collection[current_set_index]:
@@ -157,11 +155,22 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
 
         d += 1
 
+    # Getting a complete indices list of sets, that are currently not in the solution
+    for j in range(0, len(set_collection)):
+        if j in current_solution_list_indices:
+            continue
+        else:
+            not_in_solution.append(j)
+
+    if print_logs:
+        print("Set, that are currently not in solution: ", len(not_in_solution))
+
+
     if print_logs:
         print("\nCheck which elements now got uncovered...")
         print("Checking which sets are short enough to be brought into solution again")
         print("and how many elements get 'recovered' by those sets...\n")
-        print("Removed sets: ", removed_from_solution)
+        print("Removed sets: ", not_in_solution)
         print("---Amount Elements covered now: ", len(amount_elements_covered_dict), "\n")
 
 
@@ -185,7 +194,7 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         # 4. Make a dict of sets which have a length that lower-equals maximum_set_length_allowed
         # and recover enough uncovered elements
         recovering_dict = defaultdict()
-        for set_i in removed_from_solution:
+        for set_i in not_in_solution:
 
             # Checking set size
             set_length = len(set_collection[set_i])
@@ -216,7 +225,7 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
 
         current_solution_list_indices.append(key_of_cost_min)
         added_to_solution.append(key_of_cost_min)
-        removed_from_solution.remove(key_of_cost_min)
+        not_in_solution.remove(key_of_cost_min)
         #if print_logs:
             # print("Amount of sets in current solution: ", len(current_solution_list_indices))
 
