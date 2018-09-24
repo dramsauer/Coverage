@@ -159,8 +159,8 @@ if __name__ == "__main__":
             pickle.dump((greedy_solution_indices, greedy_coverage_matrix), fp)
 
     # Testing the simulated annealing
-    if True:
-        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Time elapsed in sec\n"
+    if False:
+        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Neighbourhood-Scale,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
         f = open(file, "a")
@@ -176,25 +176,38 @@ if __name__ == "__main__":
             (greedy_solution_indices, greedy_coverage_matrix) = pickle.load(fp)
 
 
-        # for p1 in np.arange(0.05, 0.2, 0.05):
-        for i in range(20):
-            time_limit = 1800
-            start = time.time()
-            solution_indices = simulated_annealing(sets=sets_universe,
-                                                   predefined_solution=greedy_solution_indices,
-                                                   amount_elements_covered_dict=greedy_coverage_matrix,
-                                                   running_time=time_limit,
-                                                   neighbourhood_scale=0.1,
-                                                   print_logs=True)
-            end = time.time()
-            execution_time = round(end - start, ndigits=3)
+        for p1 in np.arange(0.1, 0.5, 0.1):
+            neighbourhood_scale = p1
+            for i in range(10):
+                time_limit = 1800
+                start = time.time()
+                solution_indices = simulated_annealing(sets=sets_universe,
+                                                       predefined_solution=greedy_solution_indices,
+                                                       amount_elements_covered_dict=greedy_coverage_matrix,
+                                                       running_time=time_limit,
+                                                       neighbourhood_scale=neighbourhood_scale,
+                                                       print_logs=True)
+                end = time.time()
+                execution_time = round(end - start, ndigits=3)
 
-            solution_indices_len = len(solution_indices)
-            solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
-                                                                                     solution_indices)
+                solution_indices_len = len(solution_indices)
+                solution_len, elements_len, percentage = percentage_of_solution_covering(wds_universe, sets_universe,
+                                                                                         solution_indices)
 
-            print(headline)
-            values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
-                percentage) + "," + str(execution_time) + "\n"
-            print(values)
-            f.write(values)
+                print(headline)
+                values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
+                    percentage) + "," + str(neighbourhood_scale) + "," + str(execution_time) + "\n"
+                print(values)
+                f.write(values)
+
+    if False:
+        headline = "#,Amount of elements in set\n"
+
+        file = "out/elements_in_sets_universe.csv"
+        f = open(file, "a")
+        if os.stat(file).st_size == 0:
+            f.write(headline)
+
+        for e in sets_universe:
+            s = str(sets_universe.index(e)) + "," + str(len(e)) + ",\n"
+            f.write(s)
