@@ -54,8 +54,8 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
         print("Starting simulated annealing with solution size:", solution_cost)
 
     start_time = time.time()
-    i = 1
-    while (time.time()-start_time) < running_time:
+    while True:
+        i = 1
         while i <= temp_length:
             new_solution, new_solution_elements_dict = local_search_heuristic_simplified(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, print_logs)
             new_cost = len(new_solution)
@@ -86,16 +86,17 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
                         print("| Accepted a inferior solution |")
                         print("| It has ", len(best_solution), " sets.")
                         print("+------------------------------+")
-            temp = temp * cooling_factor
 
-            if print_logs:
-                print("+-------------------------------+")
-                print("| Cooling temperature down: ", round(temp, 4))
-                print("+-------------------------------+")
+            i += 1
+        temp = temp * cooling_factor
 
+        if print_logs:
+            print("+-------------------------------+")
+            print("| Cooling temperature down: ", round(temp, 4))
+            print("+-------------------------------+")
 
+        if (time.time() - start_time) < running_time:
             break
-        i += 1
     return best_solution
 
 
