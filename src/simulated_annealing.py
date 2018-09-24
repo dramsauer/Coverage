@@ -35,6 +35,10 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
     :return: solution set containing a sub-collection of indices of set_collection
     """
 
+    print("+---------------------+")
+    print("| Simulated Annealing |")
+    print("+---------------------+\n")
+
     """
     Initialization
     """
@@ -44,7 +48,7 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
     solution = predefined_solution
     solution_cost = len(solution)
     solution_elements_covered_dict = amount_elements_covered_dict
-    best_solution = set()
+    best_solution = solution
 
     if print_logs:
         print("Starting simulated annealing with solution size:", solution_cost)
@@ -53,7 +57,7 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
     i = 1
     while (time.time()-start_time) < running_time:
         while i <= temp_length:
-            new_solution, new_solution_elements_dict = local_search_heuristic(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, search_depth, print_logs)
+            new_solution, new_solution_elements_dict = local_search_heuristic_simplified(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, print_logs)
             new_cost = len(new_solution)
 
             delta = new_cost - solution_cost
@@ -63,8 +67,11 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
                 solution_elements_covered_dict = new_solution_elements_dict
                 best_solution = new_solution
                 if print_logs:
-                    print("New best solution found!")
-                    print("It has ", len(best_solution), " sets.")
+                    print("+-----------------------------+")
+                    print("| New best solution found!    |")
+                    print("| It has ", len(best_solution), " sets.")
+                    print("+-----------------------------+")
+
             else:
                 # When delta is less than zero, then exp( -(-delta) / temp )
                 # 1) if delta is low, the probability for a change of the solution gets high
@@ -74,15 +81,148 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
                     solution = new_solution
                     solution_cost = new_cost
                     solution_elements_covered_dict = new_solution_elements_dict
+                    if print_logs:
+                        print("+------------------------------+")
+                        print("| Accepted a inferior solution |")
+                        print("| It has ", len(best_solution), " sets.")
+                        print("+------------------------------+")
             temp = temp * cooling_factor
 
             if print_logs:
-                print("Cooling temperature down: ", temp)
+                print("+-------------------------------+")
+                print("| Cooling temperature down: ", round(temp, 4))
+                print("+-------------------------------+")
+
 
             break
         i += 1
     return best_solution
 
+
+
+def local_search_heuristic_simplified(sets, solution, amount_elements_covered_dict, neighbourhood_scale=0.001, print_logs=False):
+    """
+    This algorithm is based on:
+        Jacobs, L. W., & Brusco, M. J. (1995). Note: A local‐search heuristic for large set‐covering problems.
+        Naval Research Logistics (NRL), 42(7), 1129-1140.
+
+    :param sets: collection of len_set_collection subsets / and a copy of it; = sets_universe
+
+    :param solution: a feasible solution to start with
+    :param amount_elements_covered_dict: a dict which saves the numbers, how often each element is covered
+
+    :param neighbourhood_scale: percentage of sets in tentative solution to be removed at each iteration; magnitude of neighbourhood-search
+
+    :param print_logs: prints outputs and parameters of used functions.
+    :return: solution set containing a sub-collection of indices of set_collection
+    """
+
+    if print_logs:
+        print("\n")
+        print("| Local-Search-Heuristic |")
+        print()
+
+
+
+    """
+    Initialization & Pre-processes
+    """
+
+    feasible_solution = solution
+    amount_elements_covered_dict = amount_elements_covered_dict
+
+
+    set_collection = deepcopy(sets)
+
+
+    # 0.
+    current_solution_list_indices = list(feasible_solution)
+
+    d = 0
+    D = neighbourhood_scale * len(current_solution_list_indices)
+
+    not_in_solution = list()
+
+
+    """
+    Main Algorithm
+    """
+    if print_logs:
+        print("Removing sets from solution randomly...")
+
+    while d <= D:
+        # 1. Randomly select a set from solution
+        current_set_index = random.choice(current_solution_list_indices)
+
+        # 2. Move the set from solution to not-covered;
+        not_in_solution.append(current_set_index)
+        current_solution_list_indices.remove(current_set_index)
+
+        for element in set_collection[current_set_index]:
+            amount_elements_covered_dict[element] -= 1
+
+        d += 1
+
+    # Getting a complete indices list of sets, that are currently not in the solution
+    for j in range(0, len(set_collection)):
+        if j in current_solution_list_indices:
+            continue
+        else:
+            not_in_solution.append(j)
+
+    if print_logs:
+        print("Sets, that are currently not in solution: ", len(not_in_solution))
+
+
+    if print_logs:
+        print("\nCheck which elements now got uncovered...")
+        print("Checking which sets can be brought into solution \n")
+
+    added_to_solution = list()
+    uncovered_elements_existing = True
+    # If all elements are still covered, go to step 6, otherwise continue with step 4.
+    while uncovered_elements_existing: # should be True if that dict has entries!
+        # 3. Update the dict: set the elements that are still covered (-> value is higher than 0)
+        uncovered_count = 0
+        for element in amount_elements_covered_dict:
+            if amount_elements_covered_dict[element] == 0:
+                uncovered_count += 1
+
+
+        if uncovered_count == 0:
+            break
+
+
+        random_set = random.choice(not_in_solution)
+
+        add_random_set_to_solution = False
+        for element in set_collection[random_set]:
+            if amount_elements_covered_dict[element] != 0:
+                continue
+            else:
+                amount_elements_covered_dict[element] += 1
+                add_random_set_to_solution = True
+
+
+        if add_random_set_to_solution:
+            current_solution_list_indices.append(random_set)
+            added_to_solution.append(random_set)
+            #if print_logs:
+            #    print("Set added!", "Uncovered Words: ", uncovered_count)
+
+        not_in_solution.remove(random_set)
+        if len(not_in_solution) == 0:
+            break
+
+
+    # 6. Remove all duplicates
+    solution_indices = set(current_solution_list_indices)
+
+    if print_logs:
+        print("Added sets: ", len(added_to_solution), "Difference: len(Solution-now) - len(Solution-before)  = ", len(solution_indices)-len(solution))
+
+
+    return solution_indices, amount_elements_covered_dict
 
 
 def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbourhood_scale=0.001, search_depth=2, print_logs=False):
@@ -148,6 +288,7 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         current_set_index = random.choice(current_solution_list_indices)
 
         # 2. Move the set from solution to not-covered;
+        not_in_solution.append(current_set_index)
         current_solution_list_indices.remove(current_set_index)
 
         for element in set_collection[current_set_index]:
@@ -170,7 +311,6 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
         print("\nCheck which elements now got uncovered...")
         print("Checking which sets are short enough to be brought into solution again")
         print("and how many elements get 'recovered' by those sets...\n")
-        print("Removed sets: ", not_in_solution)
         print("---Amount Elements covered now: ", len(amount_elements_covered_dict), "\n")
 
 
@@ -198,6 +338,8 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
 
             # Checking set size
             set_length = len(set_collection[set_i])
+            print(len(not_in_solution))
+            print(maximum_set_length_allowed, "\n")
             if set_length <= maximum_set_length_allowed:
 
                 # Initialize set value with 0
@@ -221,13 +363,11 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
 
         # Select a set where the "cost"-value of the recovering_dict is minimum
         key_of_cost_min = min(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
-        # key_of_cost_max = max(recovering_dict.keys(), key=(lambda k: recovering_dict[k]))
 
         current_solution_list_indices.append(key_of_cost_min)
         added_to_solution.append(key_of_cost_min)
         not_in_solution.remove(key_of_cost_min)
-        #if print_logs:
-            # print("Amount of sets in current solution: ", len(current_solution_list_indices))
+
 
         for element in set_collection[key_of_cost_min]:
             amount_elements_covered_dict[element] += 1
@@ -238,9 +378,6 @@ def local_search_heuristic(sets, solution, amount_elements_covered_dict, neighbo
     if print_logs:
         print("Added sets: ", added_to_solution)
 
-
-    if solution_indices == solution:
-        print("############# EQUAL #############")
 
     return solution_indices, amount_elements_covered_dict
 

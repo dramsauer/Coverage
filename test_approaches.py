@@ -177,13 +177,14 @@ if __name__ == "__main__":
 
 
         # for p1 in np.arange(0.05, 0.2, 0.05):
-        for i in range(1):
-            time_limit = 60
+        for i in range(20):
+            time_limit = 1800
             start = time.time()
             solution_indices = simulated_annealing(sets=sets_universe,
                                                    predefined_solution=greedy_solution_indices,
                                                    amount_elements_covered_dict=greedy_coverage_matrix,
                                                    running_time=time_limit,
+                                                   neighbourhood_scale=0.1,
                                                    print_logs=True)
             end = time.time()
             execution_time = round(end - start, ndigits=3)
