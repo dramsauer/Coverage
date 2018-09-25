@@ -8,7 +8,7 @@ from src.preprocesses import *
 from text_coverage_data import sets_universe
 
 
-def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict, running_time, neighbourhood_scale=0.001, search_depth=2, temp=1.3, temp_length=100, cooling_factor=0.9, print_logs=False):
+def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict, running_time, neighbourhood_scale=0.001, search_depth=2, temp=1.3, temp_length=5, cooling_factor=0.9, print_logs=False):
     """
     Find a feasible solution for the set cover problem with greedy heuristic and optimize the solution via
     simulated annealing.
@@ -54,12 +54,13 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
         print("Starting simulated annealing with solution size:", solution_cost)
 
     start_time = time.time()
+    iterations = 0
     while True:
         i = 1
         while i <= temp_length:
             new_solution, new_solution_elements_dict = local_search_heuristic_simplified(set_collection, solution, solution_elements_covered_dict, neighbourhood_scale, print_logs)
             new_cost = len(new_solution)
-
+            iterations += 1
             delta = new_cost - solution_cost
             if delta <= 0:
                 solution = new_solution
@@ -95,9 +96,9 @@ def simulated_annealing(sets, predefined_solution, amount_elements_covered_dict,
             print("| Cooling temperature down: ", round(temp, 4))
             print("+-------------------------------+")
 
-        if (time.time() - start_time) < running_time:
+        if (time.time() - start_time) > running_time:
             break
-    return best_solution
+    return best_solution, iterations
 
 
 

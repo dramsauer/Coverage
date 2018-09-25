@@ -159,8 +159,8 @@ if __name__ == "__main__":
             pickle.dump((greedy_solution_indices, greedy_coverage_matrix), fp)
 
     # Testing the simulated annealing
-    if False:
-        headline = "Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Neighbourhood-Scale,Time elapsed in sec\n"
+    if True:
+        headline = "Amount of sets in solution,Amount Iterations,Covered Elements,Elements to be covered,Coverage Rate,Neighbourhood-Scale,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
         f = open(file, "a")
@@ -181,12 +181,12 @@ if __name__ == "__main__":
             for i in range(10):
                 time_limit = 1800
                 start = time.time()
-                solution_indices = simulated_annealing(sets=sets_universe,
-                                                       predefined_solution=greedy_solution_indices,
-                                                       amount_elements_covered_dict=greedy_coverage_matrix,
-                                                       running_time=time_limit,
-                                                       neighbourhood_scale=neighbourhood_scale,
-                                                       print_logs=True)
+                solution_indices, iterations = simulated_annealing(sets=sets_universe,
+                                                                   predefined_solution=greedy_solution_indices,
+                                                                   amount_elements_covered_dict=greedy_coverage_matrix,
+                                                                   running_time=time_limit,
+                                                                   neighbourhood_scale=neighbourhood_scale,
+                                                                   print_logs=True)
                 end = time.time()
                 execution_time = round(end - start, ndigits=3)
 
@@ -195,7 +195,7 @@ if __name__ == "__main__":
                                                                                          solution_indices)
 
                 print(headline)
-                values = str(solution_indices_len) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
+                values = str(solution_indices_len) + "," + str(iterations) + "," + str(solution_len) + "," + str(elements_len) + "," + str(
                     percentage) + "," + str(neighbourhood_scale) + "," + str(execution_time) + "\n"
                 print(values)
                 f.write(values)
