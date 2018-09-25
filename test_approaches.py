@@ -176,10 +176,10 @@ if __name__ == "__main__":
             (greedy_solution_indices, greedy_coverage_matrix) = pickle.load(fp)
 
 
-        for p1 in np.arange(0.1, 0.5, 0.1):
+        for p1 in np.arange(0.1, 0.6, 0.1):
             neighbourhood_scale = p1
-            for i in range(10):
-                time_limit = 1800
+            for i in range(3):
+                time_limit = 1500
                 start = time.time()
                 solution_indices, iterations = simulated_annealing(sets=sets_universe,
                                                                    predefined_solution=greedy_solution_indices,
