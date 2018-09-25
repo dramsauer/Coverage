@@ -8,7 +8,7 @@ from text_coverage_data import sets_universe
 from collections import *
 
 
-def disk_friendly_greedy(sets, p, max_subcol_size=250, print_logs=False):
+def disk_friendly_greedy(sets, p, max_subcol_size=3000, print_logs=False):
     """
     An special implementation of the greedy algorithm to cover large data sets. It is based on building
     sub-collections by the size of the sets given which might be faster for modern data sizes.
@@ -19,6 +19,8 @@ def disk_friendly_greedy(sets, p, max_subcol_size=250, print_logs=False):
 
     :param sets: / set_collection: collection of len_set_collection subsets / and a copy of it; = sets_universe (1)
     :param p: parameter > 1; rules the sizes of the created sub-collections. approximation and running time factor (2)
+    :param max_subcol_size: maximum size of a sub-collection
+
     :param print_logs: prints outputs and parameters of used functions.
     :return: solution list containing a sub-collection of indices of set_collection
     """
@@ -27,7 +29,7 @@ def disk_friendly_greedy(sets, p, max_subcol_size=250, print_logs=False):
     #
     # set_collection    (1)     <class 'list'> containing 'set's
     # p                 (2)     float
-    #
+
     # solution_indices  (3)     <class 'set'>
     # covered_elements  (4)     <class 'set'>
     #
@@ -171,7 +173,7 @@ def is_set_length_higher_or_equal_pk_lower(pk_lower, set_i, set_lengths):
     return set_length_bigger_pk_lower
 
 
-def build_subcollections(p, set_collection, set_lengths, max_subcol_size=250, print_params=False, print_output=False):
+def build_subcollections(p, set_collection, set_lengths, max_subcol_size=3000, print_params=False, print_output=False):
     """
     Seperate sets in Sk subcollections; k is lowest exponent on p, K is the highest
     :param max_subcol_size: maximum size of a sub-collection
