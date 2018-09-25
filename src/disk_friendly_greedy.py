@@ -8,7 +8,7 @@ from text_coverage_data import sets_universe
 from collections import *
 
 
-def disk_friendly_greedy(sets, p, print_logs=False):
+def disk_friendly_greedy(sets, p, max_subcol_size=250, print_logs=False):
     """
     An special implementation of the greedy algorithm to cover large data sets. It is based on building
     sub-collections by the size of the sets given which might be faster for modern data sizes.
@@ -80,7 +80,7 @@ def disk_friendly_greedy(sets, p, print_logs=False):
     # Sk := set_length[i];
     # K (8b) may be the greatest k with non-empty Sk.
     # This approach is the main contribution of Cormode et al.
-    subcollections = build_subcollections(p, set_collection,  set_lengths, print_params=print_logs, print_output=print_logs) # (7)
+    subcollections = build_subcollections(p, set_collection,  set_lengths, max_subcol_size=max_subcol_size, print_params=print_logs, print_output=print_logs) # (7)
     k_values = subcollections.keys()    # (8)
     k = max(k_values)                   # = (8b)
 
@@ -171,9 +171,10 @@ def is_set_length_higher_or_equal_pk_lower(pk_lower, set_i, set_lengths):
     return set_length_bigger_pk_lower
 
 
-def build_subcollections(p, set_collection, set_lengths, print_params=False, print_output=False):
+def build_subcollections(p, set_collection, set_lengths, max_subcol_size=250, print_params=False, print_output=False):
     """
     Seperate sets in Sk subcollections; k is lowest exponent on p, K is the highest
+    :param max_subcol_size: maximum size of a sub-collection
     :param p: rules the sizes of the created sub-collections. see also documentation in disk_friendly_greedy()
     :param set_collection: collection of sets
     :param set_lengths: list containing the lengths of the set in the whole set_collection; indices are the same
@@ -193,6 +194,8 @@ def build_subcollections(p, set_collection, set_lengths, print_params=False, pri
         for i in range(len(set_lengths)):
             if round(pow(p, k - 1)) <= set_lengths[i] & set_lengths[i] < round(pow(p, k)):
                 subcollections[k].append(i)
+            if len(subcollections[k]) > max_subcol_size:
+                break
 
     if print_params:
         print("Parameters:")
