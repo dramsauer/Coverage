@@ -91,7 +91,7 @@ if __name__ == "__main__":
     """
 
     # Testing the Disk-Friendly-Greedy
-    if False:
+    if True:
 
         headline = "p,Amount of sets in solution,Covered Elements,Elements to be covered,Coverage Rate,Sum of all Set-sizes in solution,Time elapsed in sec\n"
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
             pickle.dump((greedy_solution_indices, greedy_coverage_matrix), fp)
 
     # Testing the simulated annealing
-    if True:
+    if False:
         headline = "Amount of sets in solution,Amount Iterations,Covered Elements,Elements to be covered,Coverage Rate,Neighbourhood-Scale,Time elapsed in sec\n"
 
         file = "out/simulated_annealing_results.csv"
